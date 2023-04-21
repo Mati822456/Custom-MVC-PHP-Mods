@@ -1,0 +1,12 @@
+section .plugins,
+section .themes{
+    flex-direction: column;
+    width: 100%;
+}
+.card{
+    width: calc(100% - 50px);
+}
+.card .wrapper .actions,
+.card .wrapper{
+    width: 100%;
+}

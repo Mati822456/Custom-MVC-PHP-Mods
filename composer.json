@@ -1,0 +1,10 @@
+{
+    "name": "plugins/plugins",
+    "autoload": {
+        "psr-4": {
+            "Mods\\": "Mods/",
+            "App\\" : "App/"
+        }
+    },
+    "require": {}
+}
