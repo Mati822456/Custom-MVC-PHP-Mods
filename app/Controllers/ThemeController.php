@@ -29,10 +29,11 @@ class ThemeController extends Controller{
             $active[] = $theme->getName();
         }
         
-        // Render the "themes" view, passing the available themes and the active themes to the view
+        // Render the "themes" view, passing the available themes, the active themes to the view and themes that cannot be run
         $this->router->render('themes', [
             'themes' => $themes,
-            'active' => $active
+            'active' => $active,
+            'cannotRun' => $this->manager->getModsCannotRun()
         ]);
 
     }

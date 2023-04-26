@@ -21,7 +21,9 @@
                     echo $error.'</br>';
                 }
                 echo "</div>";
-                unset($_SESSION['error']['theme']);
+            }
+            if(isset($_SESSION['error'])){
+                unset($_SESSION['error']);
             }
             echo '<div class="themes">';
             foreach($themes as $theme){
@@ -33,14 +35,29 @@
                         echo '<p class="name">'.$theme->name.'</p>';
                         echo '<p class="date">Creation date: '.$theme->created.'</p>';
                         echo '<p class="version">Version: '.$theme->version.'</p>';
+                        if(isset($theme->requirements)){
+                            if(!empty($theme->requirements)){
+                                echo '<p class="requirements">';
+                                    echo '<span class="warning">!</span> Require: ' . $theme->requirements[0] . (count($theme->requirements) > 1 ? ' +' . count($theme->requirements) - 1 : '');
+                                    if(count($theme->requirements) > 1){
+                                        echo '<span class="tooltip">';
+                                        foreach(array_slice($theme->requirements, 1) as $element){
+                                            echo '<span class="element">' . $element . '</span>';
+                                        }
+                                        echo '</span>';
+                                    }
+                                echo '</p>';
+                            }
+                        }
                         echo '<p class="description">'.$theme->description.'</p>';
                         echo '<div class="actions">';
-                            if(in_array($theme->name, $active)){
-                                echo '<a href="/deactivate?name='.$theme->name.'&type=2" class="deactivate">Turn off</a>';
-                            }else{
-                                echo '<a href="/activate?name='.$theme->name.'&type=2" class="activate">Turn on</a>';
+                            if(!in_array($theme->name, $cannotRun)){
+                                if(in_array($theme->name, $active)){
+                                    echo '<a href="/deactivate?name='.$theme->name.'&type=2" class="deactivate">Turn off</a>';
+                                }else{
+                                    echo '<a href="/activate?name='.$theme->name.'&type=2" class="activate">Turn on</a>';
+                                }
                             }
-                            // echo '<a href="/uninstall?name='.$theme->name.'&type=2" class="uninstall">Uninstall</a>';
                             printf('<a onClick="showModal(\'%s\', \'%s\', \'%s\', \'%s\');" class="uninstall">Uninstall</a>', 3, 'Do you want to uninstall this theme?', $theme->name, 2);
                         echo '</div>';
                     echo '</div>';

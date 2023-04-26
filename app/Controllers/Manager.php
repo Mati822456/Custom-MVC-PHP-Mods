@@ -21,6 +21,11 @@ class Manager{
     protected Database $database;
     private PluginRepository $pluginRepository;
     private ThemeRepository $themeRepository;
+    protected array $modsCannotRun;
+    protected array $requiredMods;
+
+    protected array $Plugins_names;
+    protected array $Themes_names;
 
     public function __construct()
     {
@@ -39,6 +44,11 @@ class Manager{
         // Initialize empty arrays
         $this->plugins = [];
         $this->themes = [];
+        $this->modsCannotRun = [];
+        $this->requiredMods = [];
+
+        $this->Plugins_names = [];
+        $this->Themes_names = [];
 
         // Create a new instance of the Database class
         $this->database = new Database;
@@ -50,6 +60,18 @@ class Manager{
         $this->pluginRepository = new PluginRepository;
         $this->themeRepository = new ThemeRepository;
 
+        // Get all the activated plugins and themes from the database
+        $activatedPlugins = $this->pluginRepository->getAll();
+        $activatedThemes = $this->themeRepository->getAll();
+        
+        // Get all the names of the activated plugins and themes.
+        foreach($activatedPlugins as $active){
+            $this->Plugins_names[] = strtolower($active->getName());
+        }
+        foreach($activatedThemes as $active){
+            $this->Themes_names[] = strtolower($active->getName());
+        }
+
         // Loads the plugins and themes
         $this->load();
        
@@ -57,24 +79,10 @@ class Manager{
 
     private function load()
     {
-        // Get all the activated plugins and themes from the database
-        $activatedPlugins = $this->pluginRepository->getAll();
-        $activatedThemes = $this->themeRepository->getAll();
-
         // Initialize empty arrays
         $_SESSION['style'] = [];
         $_SESSION['scripts'] = [];
-        unset($_SESSION['error']);
-        $Plugins_names = [];
-        $Themes_names = [];
-        
-        // Get all the names of the activated plugins and themes.
-        foreach($activatedPlugins as $active){
-            $Plugins_names[] = strtolower($active->getName());
-        }
-        foreach($activatedThemes as $active){
-            $Themes_names[] = strtolower($active->getName());
-        }
+        $arrayOfModsNames = [];
 
         // Loops iterate through all the plugins directories and attempt to include the main PHP file for each plugin
         foreach($this->Plugins_dir as $file){
@@ -103,11 +111,17 @@ class Manager{
                     $_SESSION['error']['plugin'][] = '"'. $file . '" may not work properly. Supported version: '. $this->plugins[$file]->supportedVersion;
                 }
 
-                // Checks if the plugin name ($file) is in the list of activated plugins ($Plugins_names)
-                if(in_array(strtolower($file), $Plugins_names)){
-                    // If the plugin is activated, calls the run() method of the plugin object
-                    $this->plugins[strtolower($file)]->run();
+                // Check if the plugin has the requirements
+                if(isset($this->plugins[$file]->requirements)){
+                    $this->requiredMods[$this->plugins[$file]->name] = $this->plugins[$file]->requirements;
+                }else{
+                    // Checks if the plugin name ($file) is in the list of activated plugins ($Plugins_names)
+                    if(in_array(strtolower($file), $this->Plugins_names)){
+                        // If the plugin is activated, calls the run() method of the plugin object
+                        $this->plugins[strtolower($file)]->run();
+                    }
                 }
+
 
             }catch(Throwable $e){
                 // Sets an error message in the $_SESSION array if a plugin fails to load
@@ -142,11 +156,17 @@ class Manager{
                     $_SESSION['error']['theme'][] = '"'. $file . '" may not work properly. Supported version: '. $this->themes[$file]->supportedVersion;
                 }
 
-                // Checks if the theme name ($file) is in the list of activated themes ($Themes_names)
-                if(in_array(strtolower($file), $Themes_names)){
-                    // If the theme is activated, calls the run() method of the theme object
-                    $this->themes[strtolower($file)]->run();
+                // Check if the theme has the requirements
+                if(isset($this->themes[$file]->requirements)){
+                    $this->requiredMods[$this->themes[$file]->name] = $this->themes[$file]->requirements;
+                }else{
+                    // Checks if the theme name ($file) is in the list of activated themes ($Themes_names)
+                    if(in_array(strtolower($file), $this->Themes_names)){
+                        // If the theme is activated, calls the run() method of the theme object
+                        $this->themes[strtolower($file)]->run();
+                    }
                 }
+
 
             }catch(Throwable $e){
                 // Sets an error message in the $_SESSION array if a theme fails to load
@@ -154,6 +174,56 @@ class Manager{
             }
         }
 
+        // Merge the array of mods names with the keys of the plugins array.
+        $arrayOfModsNames = array_merge($arrayOfModsNames, array_keys($this->plugins));
+        // Merge the array of mods names with the keys of the themes array.
+        $arrayOfModsNames = array_merge($arrayOfModsNames, array_keys($this->themes));
+        
+        // Initializing variables for counting.
+        $totalRequiredMods = 0;
+        $counter = 0;
+
+        // String of mods names that doesn't exists
+        $namesOfNotExistMods = '';
+        
+        // Loop through the array of required mods with keys as the name of the current mod (that needs other mods) and values as an array of required mods.
+        foreach($this->requiredMods as $key => $value){
+            // Set the total number of required mods for the current mod.
+            $totalRequiredMods = count($this->requiredMods[$key]);
+
+            // Loop through required mods for the current mod 
+            foreach($value as $mod){
+                // Check if required mod exists
+                if(in_array(strtolower($mod), $arrayOfModsNames, true)){
+                    $counter++;
+                }else{
+                    $namesOfNotExistMods .= $mod . ', ';
+                }
+            }
+            // If all required mods exist, the plugin or theme corresponding to the current mod is run.
+            if($totalRequiredMods == $counter){
+                if(in_array(strtolower($key), $this->Plugins_names)){
+                    $this->plugins[strtolower($key)]->run();
+                }elseif(in_array(strtolower($key), $this->Themes_names)){
+                    $this->themes[strtolower($key)]->run();
+                }
+            }
+            
+            // Check if not all required mods exist and if not generate error message
+            if(!empty($namesOfNotExistMods)){
+                $namesOfNotExistMods = rtrim($namesOfNotExistMods, ', ');
+                $this->modsCannotRun[] = $key;
+                if(in_array(strtolower($key), array_keys($this->plugins))){
+                    $_SESSION['error']['plugin'][] = 'Not all mods exist to run "'. $key .'" plugin, required: ' . $namesOfNotExistMods;
+                }elseif(in_array(strtolower($key), array_keys($this->themes))){
+                    $_SESSION['error']['theme'][] = 'Not all mods exist to run "'. $key .'" theme, required: ' . $namesOfNotExistMods;
+                }
+            }
+
+            // Reset variables for the next mod in the loop
+            $counter = 0;
+            $namesOfNotExistMods = '';
+        }
     }
 
     // Returns an array of loaded plugins.
@@ -168,6 +238,12 @@ class Manager{
         return $this->themes;
     }
 
+    // Returns an array of mods that cannot be run
+    public function getModsCannotRun(): Array
+    {
+        return $this->modsCannotRun;
+    }
+
     // Activate plugin or theme using url: /activate?name=''&type=''
     public function activate(){
         // Assign the value of 'name' query parameter to the variable $name
@@ -176,6 +252,43 @@ class Manager{
         // Assign the value of 'type' query parameter to the variable $type
         $type = $_GET['type'];
        
+        // Check if name of the mod is in array of mods that cannot be run
+        if(in_array($_GET['name'], $this->modsCannotRun)){
+            $this->router->render('response', ['code' => 400], 400);
+        }
+
+        // Check if there are any errors, if so clear them
+        if(isset($_SESSION['error'])){
+            unset($_SESSION['error']);
+        }
+
+        // String of names of mods that have not been run
+        $namesOfNotEnabledMod = '';
+        
+        // Check if the mod name exists in the array of required mods
+        if(isset($this->requiredMods[$name])){
+            // Loop through the required mods of given mod name
+            foreach($this->requiredMods[$name] as $mod){
+                // Check if the mod is not enabled in the plugins array or in the themes array
+                if((!in_array(strtolower($mod), $this->Plugins_names)) && (!in_array(strtolower($mod), $this->Themes_names))){
+                    $namesOfNotEnabledMod .= $mod . ', ';
+                }
+            }
+            // If there are mods that are not enabled, set an error message and redirect to the appropriate page
+            if(!empty($namesOfNotEnabledMod)){
+                $namesOfNotEnabledMod = rtrim($namesOfNotEnabledMod, ', ');
+                if($type == 1){
+                    $_SESSION['error']['plugin'][] = 'Not all mods are running for "'. $name .'" plugin, required: ' . $namesOfNotEnabledMod;
+                    $this->router->redirect('/plugin'); // Redirect to the plugin page
+                    return false;
+                }elseif($type == 2){
+                    $_SESSION['error']['theme'][] = 'Not all mods are running for "'. $name .'" theme, required: ' . $namesOfNotEnabledMod;
+                    $this->router->redirect('/theme'); // Redirect to the theme page
+                    return false;
+                }
+            }
+        }
+        
         try{
             if($type == 1){ // If variable $type is equal to 1 (plugin)
                 if(class_exists('Mods\\Plugins\\' . $name, false)){ // Check if the plugin class exists
@@ -231,6 +344,43 @@ class Manager{
 
          // Assign the value of 'type' query parameter to the variable $type
         $type = $_GET['type'];
+
+        // Check if there are any errors, if so clear them
+        if(isset($_SESSION['error'])){
+            unset($_SESSION['error']);
+        }
+        
+        // String of mod names that use the given mod name
+        $arrayOfModsThatUses = '';
+
+        // Check if any mods are required
+        if(isset($this->requiredMods)){
+            // Loop through the required mods
+            foreach($this->requiredMods as $key => $mods){
+                // Check if given mod name exists in array of required mods
+                if(in_array($name, $mods)){
+                    // Check if any mods that uses this given mod is running
+                    if(in_array(strtolower($key), $this->Plugins_names) || in_array(strtolower($key), $this->Themes_names)){
+                        $arrayOfModsThatUses .= $key . ', ';
+                    }
+                }
+            }
+
+            // Check if there are any mods that use given mod
+            if(!empty($arrayOfModsThatUses)){
+                $arrayOfModsThatUses = rtrim($arrayOfModsThatUses, ', ');
+                if($type == 1){
+                    $_SESSION['error']['plugin'][] = 'Disabling this plugin is not allowed! Used by: ' . $arrayOfModsThatUses;
+                    $this->router->redirect('/plugin'); // Redirect to the plugin page
+                    return false;
+                }elseif($type == 2){
+                    $_SESSION['error']['theme'][] = 'Disabling this theme is not allowed! Used by: ' . $arrayOfModsThatUses;
+                    $this->router->redirect('/theme'); // Redirect to the theme page
+                    return false;
+                }
+            }
+        }
+
 
         try{
             if($type == 1){ // If $type is 1 (plugin)

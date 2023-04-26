@@ -99,6 +99,52 @@ section .themes{
   color: #707070;
   margin-left: 2px;
 }
+.card .wrapper .requirements{
+  background: rgba(53, 59, 72, 0.2);
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 13px;
+  color: #707070;
+  width: fit-content;
+  position: relative;
+  display: inline-block;
+}
+.card .wrapper .requirements .warning{
+  color: #eb4d4b;
+  font-weight: 700;
+}
+.card .wrapper .requirements .tooltip{
+  display: flex;
+  flex-direction: column;
+  max-width: 180px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  left: 50%;
+  margin-left: -60px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+.card .wrapper .requirements .tooltip:after{
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+}
+.card .wrapper .requirements:hover .tooltip{
+  opacity: 1;
+  visibility: visible;
+}
 .card .wrapper .description{
   margin-top: 5px;
   font-size: 15px;
@@ -167,7 +213,9 @@ section .themes{
 .error{
   color: #ff4757;
   font-weight: 700;
+  font-size: 15px;
   text-align: center;
+  width: calc(100% - 20px);
 }
 .topnav {
   overflow: hidden;
@@ -199,7 +247,7 @@ section .themes{
   color: white;
 }
 .modal{
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;

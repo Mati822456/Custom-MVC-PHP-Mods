@@ -29,10 +29,11 @@ class PluginController extends Controller{
             $active[] = $plugin->getName();
         }
         
-        // Render the "plugins" view, passing the available plugins and the active plugins to the view.
+        // Render the "plugins" view, passing the available plugins, the active plugins to the view and plugins that cannot be run
         $this->router->render('plugins', [
             'plugins' => $plugins,
-            'active' => $active
+            'active' => $active,
+            'cannotRun' => $this->manager->getModsCannotRun()
         ]);
 
     }
