@@ -19,11 +19,11 @@ class style_changer implements Theme{
         $this->name = 'Style_changer';
         $this->description = 'Basic theme with additional column display functionality in plugins and themes views.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.0.1';
+        $this->version = '1.0.0.2';
         $this->created = '21.04.2023';
         $this->type = 2;
         $this->image = 'image.svg';
-        $this->supportedVersion = '1.0.1.0';
+        $this->supportedVersion = '1.0.2.0';
     }
 
     public function run(){

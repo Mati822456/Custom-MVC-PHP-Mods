@@ -16,15 +16,15 @@
         <?php
             
             echo '<h2>Detected: '. count($plugins) . (count($plugins) > 1 ? ' plugins' : ' plugin') .'</h2><div class="line"></div>';
-            if(isset($_SESSION['error']['plugin'])){
-                echo '<div class="error">';
-                foreach($_SESSION['error']['plugin'] as $error){
-                    echo $error.'</br>';
+            if(isset($_SESSION['message']['plugin'])){
+                foreach($_SESSION['message']['plugin'] as $key => $type){
+                    foreach($type as $message){
+                        echo '<div class="alert '.$key.'"><strong>'.$key.'!</strong> <span>'.$message.'</span></div>';
+                    }
                 }
-                echo "</div>";
             }
-            if(isset($_SESSION['error'])){
-                unset($_SESSION['error']);
+            if(isset($_SESSION['message'])){
+                unset($_SESSION['message']);
             }
             echo '<div class="plugins">';
             foreach($plugins as $plugin){

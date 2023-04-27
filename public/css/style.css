@@ -210,13 +210,33 @@ section .themes{
   color: var(--card-text-color);
 }
 
-.error{
-  color: #ff4757;
-  font-weight: 700;
-  font-size: 15px;
+.alert {
+  padding: 10px 20px;
+  width: 80%;
+  color: #fff;
+  border-radius: 3px;
   text-align: center;
-  width: calc(100% - 20px);
+  margin-bottom: 10px;
 }
+.alert.error {
+  background-color: rgba(244, 67, 54, 0.85);
+}
+.alert.success {
+  background-color: rgba(4, 170, 109, 0.85);
+}
+.alert.warning {
+  background-color: rgba(255, 158, 67, 0.85);
+}
+.alert.info {
+  background-color: rgba(33, 150, 243, 0.85);
+}
+.alert span{
+  font-size: 15px;
+}
+.alert strong{
+  text-transform: capitalize;
+}
+
 .topnav {
   overflow: hidden;
   background-color: var(--nav-background-color);

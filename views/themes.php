@@ -15,15 +15,15 @@
     <section>
         <?php
             echo '<h2>Detected: '. count($themes). (count($themes) > 1 ? ' themes' : ' theme') .'</h2><div class="line"></div>';
-            if(isset($_SESSION['error']['theme'])){
-                echo '<div class="error">';
-                foreach($_SESSION['error']['theme'] as $error){
-                    echo $error.'</br>';
+            if(isset($_SESSION['message']['theme'])){
+                foreach($_SESSION['message']['theme'] as $key => $type){
+                    foreach($type as $message){
+                        echo '<div class="alert '.$key.'"><strong>'.$key.'!</strong> <span>'.$message.'</span></div>';
+                    }
                 }
-                echo "</div>";
             }
-            if(isset($_SESSION['error'])){
-                unset($_SESSION['error']);
+            if(isset($_SESSION['message'])){
+                unset($_SESSION['message']);
             }
             echo '<div class="themes">';
             foreach($themes as $theme){

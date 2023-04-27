@@ -49,7 +49,7 @@ class Manager{
 
         $this->Plugins_names = [];
         $this->Themes_names = [];
-
+        
         // Create a new instance of the Database class
         $this->database = new Database;
 
@@ -108,7 +108,7 @@ class Manager{
 
                 // Check if the current version of the application is greater than the supported version of the current plugin
                 if(version_compare(APP_VERSION, $this->plugins[$file]->supportedVersion, '>')){
-                    $_SESSION['error']['plugin'][] = '"'. $file . '" may not work properly. Supported version: '. $this->plugins[$file]->supportedVersion;
+                    $this->createAlert('plugin', 'warning', '"'. $file . '" may not work properly. Supported version: '. $this->plugins[$file]->supportedVersion);
                 }
 
                 // Check if the plugin has the requirements
@@ -125,7 +125,7 @@ class Manager{
 
             }catch(Throwable $e){
                 // Sets an error message in the $_SESSION array if a plugin fails to load
-                $_SESSION['error']['plugin'][] = 'Error while loading "' . $file . '" : ' . $e->getMessage();
+                $this->createAlert('plugin', 'error', 'Error while loading "' . $file . '" : ' . $e->getMessage());
             }
         }
 
@@ -153,7 +153,7 @@ class Manager{
 
                 // Check if the current version of the application is greater than the supported version of the current theme
                 if(version_compare(APP_VERSION, $this->themes[$file]->supportedVersion, '>')){
-                    $_SESSION['error']['theme'][] = '"'. $file . '" may not work properly. Supported version: '. $this->themes[$file]->supportedVersion;
+                    $this->createAlert('theme', 'warning', '"'. $file . '" may not work properly. Supported version: '. $this->themes[$file]->supportedVersion);
                 }
 
                 // Check if the theme has the requirements
@@ -170,7 +170,7 @@ class Manager{
 
             }catch(Throwable $e){
                 // Sets an error message in the $_SESSION array if a theme fails to load
-                $_SESSION['error']['theme'][] = 'Error while loading "' . $file . '" : ' . $e->getMessage();
+                $this->createAlert('theme', 'error', 'Error while loading "' . $file . '" : ' . $e->getMessage());
             }
         }
 
@@ -214,9 +214,9 @@ class Manager{
                 $namesOfNotExistMods = rtrim($namesOfNotExistMods, ', ');
                 $this->modsCannotRun[] = $key;
                 if(in_array(strtolower($key), array_keys($this->plugins))){
-                    $_SESSION['error']['plugin'][] = 'Not all mods exist to run "'. $key .'" plugin, required: ' . $namesOfNotExistMods;
+                    $this->createAlert('plugin', 'error', 'Not all mods exist to run "'. $key .'" plugin, required: ' . $namesOfNotExistMods);
                 }elseif(in_array(strtolower($key), array_keys($this->themes))){
-                    $_SESSION['error']['theme'][] = 'Not all mods exist to run "'. $key .'" theme, required: ' . $namesOfNotExistMods;
+                    $this->createAlert('theme', 'error', 'Not all mods exist to run "'. $key .'" theme, required: ' . $namesOfNotExistMods);
                 }
             }
 
@@ -257,11 +257,6 @@ class Manager{
             $this->router->render('response', ['code' => 400], 400);
         }
 
-        // Check if there are any errors, if so clear them
-        if(isset($_SESSION['error'])){
-            unset($_SESSION['error']);
-        }
-
         // String of names of mods that have not been run
         $namesOfNotEnabledMod = '';
         
@@ -278,11 +273,11 @@ class Manager{
             if(!empty($namesOfNotEnabledMod)){
                 $namesOfNotEnabledMod = rtrim($namesOfNotEnabledMod, ', ');
                 if($type == 1){
-                    $_SESSION['error']['plugin'][] = 'Not all mods are running for "'. $name .'" plugin, required: ' . $namesOfNotEnabledMod;
+                    $this->createAlert('plugin', 'error', 'Not all mods are running for "'. $name .'" plugin, required: ' . $namesOfNotEnabledMod);
                     $this->router->redirect('/plugin'); // Redirect to the plugin page
                     return false;
                 }elseif($type == 2){
-                    $_SESSION['error']['theme'][] = 'Not all mods are running for "'. $name .'" theme, required: ' . $namesOfNotEnabledMod;
+                    $this->createAlert('theme', 'error', 'Not all mods are running for "'. $name .'" theme, required: ' . $namesOfNotEnabledMod);
                     $this->router->redirect('/theme'); // Redirect to the theme page
                     return false;
                 }
@@ -299,6 +294,8 @@ class Manager{
                     $plugin->setName($name);
                     $this->pluginRepository->store($plugin);
                     
+                    $this->createAlert('plugin', 'success', $name . ' has been successfully launched');
+
                     $this->router->redirect('/plugin'); // Redirect to the plugin page
                 }else{
                     $this->router->render('response', ['code' => 404], 404); // Render the 404 page
@@ -311,6 +308,8 @@ class Manager{
                     $theme = new Theme;
                     $theme->setName($name);
                     $this->themeRepository->store($theme);
+
+                    $this->createAlert('theme', 'success', $name . ' has been successfully launched');
                     
                     $this->router->redirect('/theme'); // Redirect to the theme page
                 }else{
@@ -322,12 +321,12 @@ class Manager{
         }catch(Exception $e){
             if($type == 1){ // If $type is equal to 1 (plugin)
                 // Set the error message for the plugin page
-                $_SESSION['error']['plugin'][] = 'Failed to load plugin: '. $name;
+                $this->createAlert('plugin', 'error', 'Failed to load plugin: '. $name);
                 // Redirect to the plugin page
                 $this->router->redirect('/plugin');
             }elseif($type == 2){ // If $type is equal to 2 (theme)
                 // Set the error message for the theme page
-                $_SESSION['error']['theme'][] = 'Failed to load theme: '. $name;
+                $this->createAlert('theme', 'error', 'Failed to load theme: '. $name);
                 // Redirect to the theme page
                 $this->router->redirect('/theme');
             }else{ // If it's not a plugin or theme
@@ -344,11 +343,6 @@ class Manager{
 
          // Assign the value of 'type' query parameter to the variable $type
         $type = $_GET['type'];
-
-        // Check if there are any errors, if so clear them
-        if(isset($_SESSION['error'])){
-            unset($_SESSION['error']);
-        }
         
         // String of mod names that use the given mod name
         $arrayOfModsThatUses = '';
@@ -370,11 +364,11 @@ class Manager{
             if(!empty($arrayOfModsThatUses)){
                 $arrayOfModsThatUses = rtrim($arrayOfModsThatUses, ', ');
                 if($type == 1){
-                    $_SESSION['error']['plugin'][] = 'Disabling this plugin is not allowed! Used by: ' . $arrayOfModsThatUses;
+                    $this->createAlert('plugin', 'error', 'Disabling this plugin is not allowed! Used by: ' . $arrayOfModsThatUses);
                     $this->router->redirect('/plugin'); // Redirect to the plugin page
                     return false;
                 }elseif($type == 2){
-                    $_SESSION['error']['theme'][] = 'Disabling this theme is not allowed! Used by: ' . $arrayOfModsThatUses;
+                    $this->createAlert('theme', 'error', 'Disabling this theme is not allowed! Used by: ' . $arrayOfModsThatUses);
                     $this->router->redirect('/theme'); // Redirect to the theme page
                     return false;
                 }
@@ -390,6 +384,8 @@ class Manager{
                     // Delete the plugin from the database
                     $plugin = $this->pluginRepository->find(['name' => $name]);
                     $this->pluginRepository->delete($plugin);
+
+                    $this->createAlert('plugin', 'success', $name . ' has been successfully deactivated');
         
                     $this->router->redirect('/plugin'); // Redirect to the plugin page
                 }else{ // If the plugin class doesn't exist
@@ -403,6 +399,8 @@ class Manager{
                     $theme = $this->themeRepository->find(['name' => $name]);
                     $this->themeRepository->delete($theme);
                     
+                    $this->createAlert('theme', 'success', $name . ' has been successfully deactivated');
+
                     $this->router->redirect('/theme'); // Redirect to the theme page
                 }else{ // If the theme class doesn't exist
                     $this->router->render('response', ['code' => 404], 404); // Render the 404 page
@@ -414,12 +412,12 @@ class Manager{
         }catch(Exception $e){
             if($type == 1){ // If $type is 1 (plugin)
                 // Set the error message for the plugin page
-                $_SESSION['error']['plugin'][] = 'Failed to unload the plugin: '. $name; 
+                $this->createAlert('plugin', 'error', 'Failed to unload the plugin: '. $name);
 
                 $this->router->redirect('/plugin'); // Redirect to the plugin page
             }elseif($type == 2){ // If $type is 2 (theme)
                 // Set the error message for the theme page
-                $_SESSION['error']['theme'][] = 'Failed to unload theme: '. $name;
+                $this->createAlert('theme', 'error', 'Failed to unload theme: '. $name);
 
                 $this->router->redirect('/theme'); // Redirect to the theme page
             }else{ // If it's not a plugin or theme
@@ -451,11 +449,13 @@ class Manager{
                 $this->deleteDirectory('./mods/plugins/'. $name);
                 $this->deleteDirectory('./public/mods/plugins/' . $name);
 
+                $this->createAlert('plugin', 'success', $name . ' has been successfully uninstalled');
+
                 // Redirect to the plugin page
                 $this->router->redirect('/plugin');
             } catch (Exception $e) {
                 // Set the error message for the plugin page
-                $_SESSION['error']['plugin'][] = 'Failed to uninstall plugin: '. $name;
+                $this->createAlert('plugin', 'error', 'Failed to uninstall plugin: '. $name);
                 // Redirect to the plugin page
                 $this->router->redirect('/plugin');
             }
@@ -473,11 +473,13 @@ class Manager{
                 $this->deleteDirectory('./mods/themes/'. $name);
                 $this->deleteDirectory('./public/mods/themes/' . $name);
 
+                $this->createAlert('theme', 'success', $name . ' has been successfully uninstalled');
+
                 // Redirect to the theme page
                 $this->router->redirect('/theme');
             } catch (Exception $e) {
                 // Set the error message for the theme page
-                $_SESSION['error']['theme'][] = 'Failed to uninstall theme: '. $name;
+                $this->createAlert('theme', 'error', 'Failed to uninstall theme: '. $name);
                 // Redirect to the theme page
                 $this->router->redirect('/theme');
             }
@@ -500,6 +502,19 @@ class Manager{
             }
         } catch (Exception $e) {
             throw new Exception('Cannot uninstall! ' . $e->getMessage());
+        }
+    }
+
+    // Create alert message in the $_SESSION array
+    public function createAlert(String $modelType, String $alertType, String $description)
+    {
+        // Check if alert message exists with provided parameters
+        if(isset($_SESSION['message'][$modelType][$alertType])){
+            if(!in_array($description, $_SESSION['message'][$modelType][$alertType])){
+                $_SESSION['message'][$modelType][$alertType][] = $description;
+            }
+        }else{
+            $_SESSION['message'][$modelType][$alertType][] = $description;
         }
     }
 

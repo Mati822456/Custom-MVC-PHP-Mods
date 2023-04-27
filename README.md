@@ -13,12 +13,12 @@ Basic custom MVC web application that supports mods, including plugins and theme
 ## General Info
 This project is a simple website that supports mods, including plugins and themes. It is built using a custom MVC architecture, and offers basic support for database queries using only the AND operator. Custom routes can be created with support for HTTP methods such as GET, POST, PUT, PATCH, and DELETE. Plugins and themes can be obtained from repositories, currently four plugins and two themes are available. The website is designed with security in mind, and includes measures to prevent SQL injection attacks. Additionally, the website is fully responsive, ensuring that it works well on a wide range of devices and screen sizes.
 
-![plugins](https://user-images.githubusercontent.com/103435077/234556208-3bff4128-5b6a-428c-9f96-63a2dfc8ac69.png)
-![themes](https://user-images.githubusercontent.com/103435077/234405737-c89a9ab5-6fda-4087-afd9-46140160bffb.png)
+![plugins](https://user-images.githubusercontent.com/103435077/234981214-d13407ef-acb3-41b0-8dbe-9cc37d7c5fbd.png)
+![themes](https://user-images.githubusercontent.com/103435077/234981220-ca185b73-ec8b-4424-9f96-ed791bd2dbb7.png)
 
 ### Some modifications enabled:
 ![example_main](https://user-images.githubusercontent.com/103435077/233671184-4b452552-0dbf-442d-bbdc-051a146ef444.png)
-![example_theme](https://user-images.githubusercontent.com/103435077/234405746-adf82d3b-8197-4c5b-aa23-616d11eba370.png)
+![example_theme](https://user-images.githubusercontent.com/103435077/234981222-f51299d0-ada4-442f-b90f-ea90ec24270b.png)
 
 ## Technologies
 * PHP 8.1.5
