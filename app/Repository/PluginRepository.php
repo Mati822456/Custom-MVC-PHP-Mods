@@ -8,27 +8,25 @@ use App\Models\Plugin;
 class PluginRepository extends Plugin{
 
     private Database $database;
-    private Array $plugins;
 
     public function __construct()
     {
         $this->database = new Database;
+    }
 
-        $this->plugins = [];
+    public function getAll(): Array
+    {
+        $plugins = [];
 
         foreach($this->database->getAll('plugins') as $result){
             $plugin = new Plugin;
             $plugin->setId($result['id']);
             $plugin->setName($result['name']);
 
-            $this->plugins[] = $plugin;
+            $plugins[] = $plugin;
             unset($plugin);
         }
-    }
-
-    public function getAll(): Array
-    {
-        return $this->plugins;
+        return $plugins;
     }
 
     public function find(Array $param): ?Plugin
@@ -51,15 +49,13 @@ class PluginRepository extends Plugin{
         );
     }
 
-    public function update(Plugin $plugin): Plugin
+    public function update(Plugin $plugin)
     {
         $this->database->update(
             'plugins',
             ['name = "' . $plugin->getName() . '"'],
             ['id = '. $plugin->getId()]
         );
-
-        return $plugin;
     }
 
     public function delete(Plugin $plugin)

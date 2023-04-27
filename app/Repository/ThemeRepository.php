@@ -8,27 +8,25 @@ use App\Models\Theme;
 class ThemeRepository extends Theme{
 
     private Database $database;
-    private Array $themes;
 
     public function __construct()
     {
-        $this->database = new Database;
+        $this->database = new Database;    
+    }
 
-        $this->themes = [];
+    public function getAll(): Array
+    {
+        $themes = [];
 
         foreach($this->database->getAll('themes') as $result){
             $theme = new Theme;
             $theme->setId($result['id']);
             $theme->setName($result['name']);
 
-            $this->themes[] = $theme;
+            $themes[] = $theme;
             unset($theme);
         }
-    }
-
-    public function getAll(): Array
-    {
-        return $this->themes;
+        return $themes;
     }
 
     public function find(Array $param): ?Theme
@@ -51,15 +49,13 @@ class ThemeRepository extends Theme{
         );
     }
 
-    public function update(Theme $theme): Theme
+    public function update(Theme $theme)
     {
         $this->database->update(
             'themes',
             ['name = "' . $theme->getName() . '"'],
             ['id = '. $theme->getId()]
         );
-
-        return $theme;
     }
 
     public function delete(Theme $theme)
