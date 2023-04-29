@@ -19,15 +19,15 @@ class style_changer implements Theme{
         $this->name = 'Style_changer';
         $this->description = 'Basic theme with additional column display functionality in plugins and themes views.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.0.2';
+        $this->version = '1.0.0.3';
         $this->created = '21.04.2023';
         $this->type = 2;
         $this->image = 'image.svg';
-        $this->supportedVersion = '1.0.2.0';
+        $this->supportedVersion = '1.0.3.0';
     }
 
     public function run(){
-        $_SESSION['style'][] = 'Mods\\Themes\\' . $this->name . '\\style.css';
+        $_SESSION['style'][] = 'public\\mods\\themes\\' . $this->name . '\\style.css';
 
         if(!file_exists('./public/mods/themes/' . $this->name . '/style.css')){
             copy('./mods/themes/' . $this->name. '/style.css', './public/mods/themes/' . $this->name . '/style.css');

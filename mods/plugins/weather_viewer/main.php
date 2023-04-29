@@ -20,11 +20,11 @@ class Weather_viewer implements Plugin{
         $this->name = 'Weather_viewer';
         $this->description = 'This plugin displays current weather in Warsaw on the main page.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.0.1';
+        $this->version = '1.0.0.2';
         $this->created = '24.04.2023';
         $this->type = 1;
         $this->image = 'image.svg';
-        $this->supportedVersion = '1.0.2.0';
+        $this->supportedVersion = '1.0.3.0';
         $this->requirements = ['Weather_core'];
     }
 

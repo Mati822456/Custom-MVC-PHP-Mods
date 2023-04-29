@@ -11,14 +11,15 @@ Basic custom MVC web application that supports mods, including plugins and theme
 * [Contact](#contact)
 
 ## General Info
-This project is a simple website that supports mods, including plugins and themes. It is built using a custom MVC architecture, and offers basic support for database queries using only the AND operator. Custom routes can be created with support for HTTP methods such as GET, POST, PUT, PATCH, and DELETE. Plugins and themes can be obtained from repositories, currently four plugins and two themes are available. The website is designed with security in mind, and includes measures to prevent SQL injection attacks. Additionally, the website is fully responsive, ensuring that it works well on a wide range of devices and screen sizes.
+This project is a simple website that supports mods, including plugins and themes. It is built using a custom MVC architecture, and offers basic support for database queries using only the AND operator. Custom routes can be created with support for HTTP methods such as GET, POST, PUT, PATCH, and DELETE. Plugins and themes can be obtained from repositories, currently four plugins and three themes are available. The website is designed with security in mind, and includes measures to prevent SQL injection attacks. Additionally, the website is fully responsive, ensuring that it works well on a wide range of devices and screen sizes.
 
-![plugins](https://user-images.githubusercontent.com/103435077/234981214-d13407ef-acb3-41b0-8dbe-9cc37d7c5fbd.png)
-![themes](https://user-images.githubusercontent.com/103435077/234981220-ca185b73-ec8b-4424-9f96-ed791bd2dbb7.png)
+![plugins](https://user-images.githubusercontent.com/103435077/235314202-6e0deb85-ee87-4f86-9d15-12e2a5fe557b.png)
+![themes](https://user-images.githubusercontent.com/103435077/235314203-3b577166-97c0-4423-86a0-6b406b2ee932.png)
 
 ### Some modifications enabled:
 ![example_main](https://user-images.githubusercontent.com/103435077/233671184-4b452552-0dbf-442d-bbdc-051a146ef444.png)
-![example_theme](https://user-images.githubusercontent.com/103435077/234981222-f51299d0-ada4-442f-b90f-ea90ec24270b.png)
+![example_theme](https://user-images.githubusercontent.com/103435077/235314200-14867eee-b216-4817-8447-7ba7aecc821a.png)
+![example_theme_2](https://user-images.githubusercontent.com/103435077/235314201-aaf46010-97db-46bd-b9bf-921b8a8f1f5f.png)
 
 ## Technologies
 * PHP 8.1.5

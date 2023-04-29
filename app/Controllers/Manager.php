@@ -23,6 +23,7 @@ class Manager{
     private ThemeRepository $themeRepository;
     protected array $modsCannotRun;
     protected array $requiredMods;
+    protected array $incompatibleMods;
 
     protected array $Plugins_names;
     protected array $Themes_names;
@@ -46,6 +47,7 @@ class Manager{
         $this->themes = [];
         $this->modsCannotRun = [];
         $this->requiredMods = [];
+        $this->incompatibleMods = [];
 
         $this->Plugins_names = [];
         $this->Themes_names = [];
@@ -114,14 +116,12 @@ class Manager{
                 // Check if the plugin has the requirements
                 if(isset($this->plugins[$file]->requirements)){
                     $this->requiredMods[$this->plugins[$file]->name] = $this->plugins[$file]->requirements;
-                }else{
-                    // Checks if the plugin name ($file) is in the list of activated plugins ($Plugins_names)
-                    if(in_array(strtolower($file), $this->Plugins_names)){
-                        // If the plugin is activated, calls the run() method of the plugin object
-                        $this->plugins[strtolower($file)]->run();
-                    }
                 }
 
+                // Check if the plugins has the incompatible mods
+                if(isset($this->plugins[$file]->incompatible)){
+                    $this->incompatibleMods[$this->plugins[$file]->name] = $this->plugins[$file]->incompatible;
+                }
 
             }catch(Throwable $e){
                 // Sets an error message in the $_SESSION array if a plugin fails to load
@@ -159,21 +159,19 @@ class Manager{
                 // Check if the theme has the requirements
                 if(isset($this->themes[$file]->requirements)){
                     $this->requiredMods[$this->themes[$file]->name] = $this->themes[$file]->requirements;
-                }else{
-                    // Checks if the theme name ($file) is in the list of activated themes ($Themes_names)
-                    if(in_array(strtolower($file), $this->Themes_names)){
-                        // If the theme is activated, calls the run() method of the theme object
-                        $this->themes[strtolower($file)]->run();
-                    }
                 }
 
+                // Check if the theme has the incompatible mods
+                if(isset($this->themes[$file]->incompatible)){
+                    $this->incompatibleMods[$this->themes[$file]->name] = $this->themes[$file]->incompatible;
+                }
 
             }catch(Throwable $e){
                 // Sets an error message in the $_SESSION array if a theme fails to load
                 $this->createAlert('theme', 'error', 'Error while loading "' . $file . '" : ' . $e->getMessage());
             }
         }
-
+        
         // Merge the array of mods names with the keys of the plugins array.
         $arrayOfModsNames = array_merge($arrayOfModsNames, array_keys($this->plugins));
         // Merge the array of mods names with the keys of the themes array.
@@ -200,12 +198,17 @@ class Manager{
                     $namesOfNotExistMods .= $mod . ', ';
                 }
             }
-            // If all required mods exist, the plugin or theme corresponding to the current mod is run.
-            if($totalRequiredMods == $counter){
+
+            // If not all required mods exist, the plugin or theme is being deleted from database if exists
+            if($totalRequiredMods != $counter){
                 if(in_array(strtolower($key), $this->Plugins_names)){
-                    $this->plugins[strtolower($key)]->run();
+                    $plugin = $this->pluginRepository->find(['name' => $key]);
+                    $this->pluginRepository->delete($plugin);
+                    unset($this->Plugins_names[array_search(strtolower($mod), $this->Plugins_names)]);
                 }elseif(in_array(strtolower($key), $this->Themes_names)){
-                    $this->themes[strtolower($key)]->run();
+                    $theme = $this->themeRepository->find(['name' => $key]);
+                    $this->themeRepository->delete($theme);
+                    unset($this->Themes_names[array_search(strtolower($mod), $this->Themes_names)]);
                 }
             }
             
@@ -223,6 +226,53 @@ class Manager{
             // Reset variables for the next mod in the loop
             $counter = 0;
             $namesOfNotExistMods = '';
+        }
+
+        // String of launched incompatible mods
+        $namesOfLaunchedIncompatible = '';
+
+        // Loop through each incompatible mod and check if it's both enabled and incompatible with the current mod
+        foreach($this->incompatibleMods as $key => $value){
+            foreach($value as $mod){
+                // Check if the current incompatible mod is enabled and incompatible with the current mod
+                if((in_array(strtolower($mod), $this->Plugins_names) || in_array(strtolower($mod), $this->Themes_names)) && (in_array(strtolower($key), $this->Plugins_names) || in_array(strtolower($key), $this->Themes_names))){
+                    $namesOfLaunchedIncompatible .= $mod . ', ';
+
+                    // Check if the current incompatible mod is activated and is a plugin and delete it if it is
+                    if(in_array(strtolower($mod), $this->Plugins_names)){
+                        $plugin = $this->pluginRepository->find(['name' => $mod]);
+                        $this->pluginRepository->delete($plugin);
+                        unset($this->Plugins_names[array_search(strtolower($mod), $this->Plugins_names)]);
+                    }
+
+                    // Check if the current incompatible mod is activated and is a theme and delete it if it is
+                    if(in_array(strtolower($mod), $this->Themes_names)){
+                        $theme = $this->themeRepository->find(['name' => $mod]);
+                        $this->themeRepository->delete($theme);
+                        unset($this->Themes_names[array_search(strtolower($mod), $this->Themes_names)]);
+                    }
+                }
+            }
+
+            // If there was any launched incompatible mods, create a warning alert for both plugins and themes.
+            if(!empty($namesOfLaunchedIncompatible)){
+                $namesOfLaunchedIncompatible = rtrim($namesOfLaunchedIncompatible, ', ');
+
+                $this->createAlert('plugin', 'warning', 'Disabling incompatible mods: '. $namesOfLaunchedIncompatible);
+                $this->createAlert('theme', 'warning', 'Disabling incompatible mods: '. $namesOfLaunchedIncompatible);
+            }
+
+            $namesOfLaunchedIncompatible = '';
+        }
+        
+        // Loop through each mod name in the given array and run the mod if it's activated
+        foreach($arrayOfModsNames as $mod){
+            if(in_array(strtolower($mod), $this->Plugins_names)){
+                $this->plugins[strtolower($mod)]->run();
+            }
+            if(in_array(strtolower($mod), $this->Themes_names)){
+                $this->themes[strtolower($mod)]->run();
+            }
         }
     }
 
@@ -283,12 +333,69 @@ class Manager{
                 }
             }
         }
+
+        // String of launched incompatible mods
+        $namesOfLaunchedIncompatible = '';
+
+        // String of mods that cannot have incompatible mods
+        $modsThatCannotHaveIncompatible = '';
+
+        // Check if there any incompatible mods
+        if(isset($this->incompatibleMods)){
+            // Loop through incompatible mods to check if they are enabled
+            foreach($this->incompatibleMods as $key => $value){
+                foreach($value as $mod){
+                    // Check if the incompatible mod is already enabled
+                    if($key == $name){
+                        if((in_array(strtolower($mod), $this->Plugins_names)) || (in_array(strtolower($mod), $this->Themes_names))){
+                            $namesOfLaunchedIncompatible .= $mod . ', ';
+                        }
+                    }else{
+                        // Check if the current mod will cause problems with other enabled mods
+                        if($name === $mod){
+                            if(in_array(strtolower($key), $this->Plugins_names) || in_array(strtolower($key), $this->Themes_names)){
+                                $modsThatCannotHaveIncompatible .= $key . ', ';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Check if there are any incompatible mods enabled and creating an error alert if true
+        if(!empty($namesOfLaunchedIncompatible)){
+            $namesOfLaunchedIncompatible = rtrim($namesOfLaunchedIncompatible, ', ');
+            if($type == 1){
+                $this->createAlert('plugin', 'error', 'Incompatible mods are enabled: '. $namesOfLaunchedIncompatible);
+                $this->router->redirect('/plugin');
+                return false;
+            }elseif($type == 2){
+                $this->createAlert('theme', 'error', 'Incompatible mods are enabled: '. $namesOfLaunchedIncompatible);
+                $this->router->redirect('/theme');
+                return false;
+            }
+        }
+
+        // Check if the current mod will cause problems with other enabled mods and creating an error alert if true
+        if(!empty($modsThatCannotHaveIncompatible)){
+            $modsThatCannotHaveIncompatible = rtrim($modsThatCannotHaveIncompatible, ', ');
+            if($type == 1){
+                $this->createAlert('plugin', 'error', 'This mod will cause problems in:  '. $modsThatCannotHaveIncompatible);
+                $this->router->redirect('/plugin');
+                return false;
+            }elseif($type == 2){
+                $this->createAlert('theme', 'error', 'This mod will cause problems in: '. $modsThatCannotHaveIncompatible);
+                $this->router->redirect('/theme');
+                return false;
+            }
+        }
         
+
         try{
             if($type == 1){ // If variable $type is equal to 1 (plugin)
                 if(class_exists('Mods\\Plugins\\' . $name, false)){ // Check if the plugin class exists
                     $this->plugins[strtolower($name)]->run(); // Run the plugin's main method
-        
+                    
                     // Store the plugin name in the database
                     $plugin = new Plugin;
                     $plugin->setName($name);
@@ -303,7 +410,7 @@ class Manager{
             }elseif($type == 2){ // If $type is equal to 2 (theme)
                 if(class_exists('Mods\\Themes\\' . $name, false)){ // Check if the theme class exists
                     $this->themes[strtolower($name)]->run(); // Run the theme's main method
-
+                    
                     // Store the theme name in the database
                     $theme = new Theme;
                     $theme->setName($name);

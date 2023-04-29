@@ -99,7 +99,8 @@ section .themes{
   color: #707070;
   margin-left: 2px;
 }
-.card .wrapper .requirements{
+.card .wrapper .requirements,
+.card .wrapper .incompatible{
   background: rgba(53, 59, 72, 0.2);
   padding: 2px 5px;
   border-radius: 3px;
@@ -109,11 +110,13 @@ section .themes{
   position: relative;
   display: inline-block;
 }
-.card .wrapper .requirements .warning{
+.card .wrapper .requirements .warning,
+.card .wrapper .incompatible .warning{
   color: #eb4d4b;
   font-weight: 700;
 }
-.card .wrapper .requirements .tooltip{
+.card .wrapper .requirements .tooltip,
+.card .wrapper .incompatible .tooltip{
   display: flex;
   flex-direction: column;
   max-width: 180px;
@@ -131,7 +134,8 @@ section .themes{
   opacity: 0;
   transition: opacity 0.1s;
 }
-.card .wrapper .requirements .tooltip:after{
+.card .wrapper .requirements .tooltip:after,
+.card .wrapper .incompatible .tooltip:after{
   content: "";
   position: absolute;
   bottom: 100%;
@@ -141,7 +145,8 @@ section .themes{
   border-style: solid;
   border-color: transparent transparent #555 transparent;
 }
-.card .wrapper .requirements:hover .tooltip{
+.card .wrapper .requirements:hover .tooltip,
+.card .wrapper .incompatible:hover .tooltip{
   opacity: 1;
   visibility: visible;
 }

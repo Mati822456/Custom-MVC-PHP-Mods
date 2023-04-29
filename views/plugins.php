@@ -50,6 +50,20 @@
                                 echo '</p>';
                             }
                         }
+                        if(isset($plugin->incompatible)){
+                            if(!empty($plugin->incompatible)){
+                                echo '<p class="incompatible">';
+                                    echo '<span class="warning">!</span> Incompatible: ' . $plugin->incompatible[0] . (count($plugin->incompatible) > 1 ? ' +' . count($plugin->incompatible) - 1 : '');
+                                    if(count($plugin->incompatible) > 1){
+                                        echo '<span class="tooltip">';
+                                        foreach(array_slice($plugin->incompatible, 1) as $element){
+                                            echo '<span class="element">' . $element . '</span>';
+                                        }
+                                        echo '</span>';
+                                    }
+                                echo '</p>';
+                            }
+                        }
                         echo '<p class="description">'.$plugin->description.'</p>';
                         echo '<div class="actions">';
                             if(!in_array($plugin->name, $cannotRun)){

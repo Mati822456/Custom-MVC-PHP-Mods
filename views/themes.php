@@ -29,7 +29,7 @@
             foreach($themes as $theme){
                 
                 echo '<div class="card">';
-                    echo '<img src=./public/mods/Themes/' . $theme->name . '/' . $theme->image . '>';
+                    echo '<img src=./public/mods/themes/' . $theme->name . '/' . $theme->image . '>';
                     echo '<div class="line-1"> </div>';
                     echo '<div class="wrapper">';
                         echo '<p class="name">'.$theme->name.'</p>';
@@ -42,6 +42,20 @@
                                     if(count($theme->requirements) > 1){
                                         echo '<span class="tooltip">';
                                         foreach(array_slice($theme->requirements, 1) as $element){
+                                            echo '<span class="element">' . $element . '</span>';
+                                        }
+                                        echo '</span>';
+                                    }
+                                echo '</p>';
+                            }
+                        }
+                        if(isset($theme->incompatible)){
+                            if(!empty($theme->incompatible)){
+                                echo '<p class="incompatible">';
+                                    echo '<span class="warning">!</span> Incompatible: ' . $theme->incompatible[0] . (count($theme->incompatible) > 1 ? ' +' . count($theme->incompatible) - 1 : '');
+                                    if(count($theme->incompatible) > 1){
+                                        echo '<span class="tooltip">';
+                                        foreach(array_slice($theme->incompatible, 1) as $element){
                                             echo '<span class="element">' . $element . '</span>';
                                         }
                                         echo '</span>';

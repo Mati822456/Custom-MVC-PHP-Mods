@@ -1,0 +1,44 @@
+.card{
+    flex-direction: column;
+    min-height: 350px;
+    justify-content: center;
+    width: 350px;
+}
+.card img{
+    width: 64px;
+    height: 64px;
+    margin: 10px;
+}
+.card .wrapper{
+    text-align: center;
+}
+.card .wrapper .requirements,
+.card .wrapper .incompatible{
+    margin: auto;
+}
+.card .wrapper .actions a{
+    width: 50%;
+}
+.card .line-1{
+    padding: 0;
+    width: calc(100% - 20px);
+    margin: 5px 0;
+    border-right: none;
+    border-bottom: 1px solid var(--line-color);
+}
+
+@media screen and (max-width: 475px) {
+    .card{
+        width: calc(100% - 50px);
+    }
+    .card img{
+        width: 64px;
+        height: 64px;
+    }
+  }
+  @media screen and (max-width: 375px){
+    .card{
+        min-height: auto;
+        width: calc(100% - 30px);
+    }
+}
