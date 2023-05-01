@@ -92,6 +92,7 @@ class Router{
     {
         // Sends an HTTP header to redirect the browser to a new URL specified in $route using HTTP status code 302.
         header('Location: '. $route, true, 302);
+        exit;
     }
 
     public function run()

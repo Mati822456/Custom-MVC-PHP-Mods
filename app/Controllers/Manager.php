@@ -307,6 +307,14 @@ class Manager{
             $this->router->render('response', ['code' => 400], 400);
         }
 
+        // Check if this mod is active, if so redirect to the appropriate page
+        if(in_array(strtolower($name), $this->Plugins_names)){
+            $this->router->redirect('/plugin'); // Redirect to the plugin page
+        }
+        if(in_array(strtolower($name), $this->Themes_names)){
+            $this->router->redirect('/theme'); // Redirect to the theme page
+        }
+
         // String of names of mods that have not been run
         $namesOfNotEnabledMod = '';
         
@@ -325,11 +333,9 @@ class Manager{
                 if($type == 1){
                     $this->createAlert('plugin', 'error', 'Not all mods are running for "'. $name .'" plugin, required: ' . $namesOfNotEnabledMod);
                     $this->router->redirect('/plugin'); // Redirect to the plugin page
-                    return false;
                 }elseif($type == 2){
                     $this->createAlert('theme', 'error', 'Not all mods are running for "'. $name .'" theme, required: ' . $namesOfNotEnabledMod);
                     $this->router->redirect('/theme'); // Redirect to the theme page
-                    return false;
                 }
             }
         }
@@ -368,11 +374,9 @@ class Manager{
             if($type == 1){
                 $this->createAlert('plugin', 'error', 'Incompatible mods are enabled: '. $namesOfLaunchedIncompatible);
                 $this->router->redirect('/plugin');
-                return false;
             }elseif($type == 2){
                 $this->createAlert('theme', 'error', 'Incompatible mods are enabled: '. $namesOfLaunchedIncompatible);
                 $this->router->redirect('/theme');
-                return false;
             }
         }
 
@@ -382,11 +386,9 @@ class Manager{
             if($type == 1){
                 $this->createAlert('plugin', 'error', 'This mod will cause problems in:  '. $modsThatCannotHaveIncompatible);
                 $this->router->redirect('/plugin');
-                return false;
             }elseif($type == 2){
                 $this->createAlert('theme', 'error', 'This mod will cause problems in: '. $modsThatCannotHaveIncompatible);
                 $this->router->redirect('/theme');
-                return false;
             }
         }
         
@@ -451,6 +453,15 @@ class Manager{
          // Assign the value of 'type' query parameter to the variable $type
         $type = $_GET['type'];
         
+        // Check if this mod is active, if not then redirect to the appropriate page
+        if(!in_array(strtolower($name), $this->Plugins_names) && !in_array(strtolower($name), $this->Themes_names)){
+            if($type == 1){
+                $this->router->redirect('/plugin'); // Redirect to the plugin page
+            }elseif($type == 2){
+                $this->router->redirect('/theme'); // Redirect to the theme page
+            }
+        }
+
         // String of mod names that use the given mod name
         $arrayOfModsThatUses = '';
 
@@ -473,11 +484,9 @@ class Manager{
                 if($type == 1){
                     $this->createAlert('plugin', 'error', 'Disabling this plugin is not allowed! Used by: ' . $arrayOfModsThatUses);
                     $this->router->redirect('/plugin'); // Redirect to the plugin page
-                    return false;
                 }elseif($type == 2){
                     $this->createAlert('theme', 'error', 'Disabling this theme is not allowed! Used by: ' . $arrayOfModsThatUses);
                     $this->router->redirect('/theme'); // Redirect to the theme page
-                    return false;
                 }
             }
         }
