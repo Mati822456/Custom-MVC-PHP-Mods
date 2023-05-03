@@ -31,6 +31,7 @@
                 echo '<div class="card">';
                     echo '<img src=./public/mods/themes/' . $theme->name . '/' . $theme->image . '>';
                     echo '<div class="line-1"> </div>';
+                    echo '<a href="/show?name='.$theme->name.'" class="info"><i class="fa-solid fa-circle-info"></i></a>';
                     echo '<div class="wrapper">';
                         echo '<p class="name">'.$theme->name.'</p>';
                         echo '<p class="date">Creation date: '.$theme->created.'</p>';

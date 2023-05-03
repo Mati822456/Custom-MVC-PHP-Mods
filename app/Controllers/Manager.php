@@ -307,12 +307,12 @@ class Manager{
             $this->router->render('response', ['code' => 400], 400);
         }
 
-        // Check if this mod is active, if so redirect to the appropriate page
+        // Check if this mod is active, if so redirect to the previous page
         if(in_array(strtolower($name), $this->Plugins_names)){
-            $this->router->redirect('/plugin'); // Redirect to the plugin page
+            $this->router->back();
         }
         if(in_array(strtolower($name), $this->Themes_names)){
-            $this->router->redirect('/theme'); // Redirect to the theme page
+            $this->router->back();
         }
 
         // String of names of mods that have not been run
@@ -327,15 +327,15 @@ class Manager{
                     $namesOfNotEnabledMod .= $mod . ', ';
                 }
             }
-            // If there are mods that are not enabled, set an error message and redirect to the appropriate page
+            // If there are mods that are not enabled, set an error message and redirect to the previous page
             if(!empty($namesOfNotEnabledMod)){
                 $namesOfNotEnabledMod = rtrim($namesOfNotEnabledMod, ', ');
                 if($type == 1){
                     $this->createAlert('plugin', 'error', 'Not all mods are running for "'. $name .'" plugin, required: ' . $namesOfNotEnabledMod);
-                    $this->router->redirect('/plugin'); // Redirect to the plugin page
+                    $this->router->back();
                 }elseif($type == 2){
                     $this->createAlert('theme', 'error', 'Not all mods are running for "'. $name .'" theme, required: ' . $namesOfNotEnabledMod);
-                    $this->router->redirect('/theme'); // Redirect to the theme page
+                    $this->router->back();
                 }
             }
         }
@@ -373,10 +373,10 @@ class Manager{
             $namesOfLaunchedIncompatible = rtrim($namesOfLaunchedIncompatible, ', ');
             if($type == 1){
                 $this->createAlert('plugin', 'error', 'Incompatible mods are enabled: '. $namesOfLaunchedIncompatible);
-                $this->router->redirect('/plugin');
+                $this->router->back();
             }elseif($type == 2){
                 $this->createAlert('theme', 'error', 'Incompatible mods are enabled: '. $namesOfLaunchedIncompatible);
-                $this->router->redirect('/theme');
+                $this->router->back();
             }
         }
 
@@ -385,10 +385,10 @@ class Manager{
             $modsThatCannotHaveIncompatible = rtrim($modsThatCannotHaveIncompatible, ', ');
             if($type == 1){
                 $this->createAlert('plugin', 'error', 'This mod will cause problems in:  '. $modsThatCannotHaveIncompatible);
-                $this->router->redirect('/plugin');
+                $this->router->back();
             }elseif($type == 2){
                 $this->createAlert('theme', 'error', 'This mod will cause problems in: '. $modsThatCannotHaveIncompatible);
-                $this->router->redirect('/theme');
+                $this->router->back();
             }
         }
         
@@ -405,7 +405,7 @@ class Manager{
                     
                     $this->createAlert('plugin', 'success', $name . ' has been successfully launched');
 
-                    $this->router->redirect('/plugin'); // Redirect to the plugin page
+                    $this->router->back();
                 }else{
                     $this->router->render('response', ['code' => 404], 404); // Render the 404 page
                 }
@@ -420,7 +420,7 @@ class Manager{
 
                     $this->createAlert('theme', 'success', $name . ' has been successfully launched');
                     
-                    $this->router->redirect('/theme'); // Redirect to the theme page
+                    $this->router->back();
                 }else{
                     $this->router->render('response', ['code' => 404], 404); // Render the 404 page
                 }
@@ -431,13 +431,13 @@ class Manager{
             if($type == 1){ // If $type is equal to 1 (plugin)
                 // Set the error message for the plugin page
                 $this->createAlert('plugin', 'error', 'Failed to load plugin: '. $name);
-                // Redirect to the plugin page
-                $this->router->redirect('/plugin');
+                
+                $this->router->back();
             }elseif($type == 2){ // If $type is equal to 2 (theme)
                 // Set the error message for the theme page
                 $this->createAlert('theme', 'error', 'Failed to load theme: '. $name);
-                // Redirect to the theme page
-                $this->router->redirect('/theme');
+                
+                $this->router->back();
             }else{ // If it's not a plugin or theme
                 $this->router->render('response', ['code' => 400], 400);
             }
@@ -453,12 +453,12 @@ class Manager{
          // Assign the value of 'type' query parameter to the variable $type
         $type = $_GET['type'];
         
-        // Check if this mod is active, if not then redirect to the appropriate page
+        // Check if this mod is active, if not then redirect to the previous page
         if(!in_array(strtolower($name), $this->Plugins_names) && !in_array(strtolower($name), $this->Themes_names)){
             if($type == 1){
-                $this->router->redirect('/plugin'); // Redirect to the plugin page
+                $this->router->back();
             }elseif($type == 2){
-                $this->router->redirect('/theme'); // Redirect to the theme page
+                $this->router->back();
             }
         }
 
@@ -483,10 +483,10 @@ class Manager{
                 $arrayOfModsThatUses = rtrim($arrayOfModsThatUses, ', ');
                 if($type == 1){
                     $this->createAlert('plugin', 'error', 'Disabling this plugin is not allowed! Used by: ' . $arrayOfModsThatUses);
-                    $this->router->redirect('/plugin'); // Redirect to the plugin page
+                    $this->router->back();
                 }elseif($type == 2){
                     $this->createAlert('theme', 'error', 'Disabling this theme is not allowed! Used by: ' . $arrayOfModsThatUses);
-                    $this->router->redirect('/theme'); // Redirect to the theme page
+                    $this->router->back();
                 }
             }
         }
@@ -503,7 +503,7 @@ class Manager{
 
                     $this->createAlert('plugin', 'success', $name . ' has been successfully deactivated');
         
-                    $this->router->redirect('/plugin'); // Redirect to the plugin page
+                    $this->router->back();
                 }else{ // If the plugin class doesn't exist
                     $this->router->render('response', ['code' => 404], 404); // Render the 404 page
                 }
@@ -517,7 +517,7 @@ class Manager{
                     
                     $this->createAlert('theme', 'success', $name . ' has been successfully deactivated');
 
-                    $this->router->redirect('/theme'); // Redirect to the theme page
+                    $this->router->back();
                 }else{ // If the theme class doesn't exist
                     $this->router->render('response', ['code' => 404], 404); // Render the 404 page
                 }
@@ -530,12 +530,12 @@ class Manager{
                 // Set the error message for the plugin page
                 $this->createAlert('plugin', 'error', 'Failed to unload the plugin: '. $name);
 
-                $this->router->redirect('/plugin'); // Redirect to the plugin page
+                $this->router->back();
             }elseif($type == 2){ // If $type is 2 (theme)
                 // Set the error message for the theme page
                 $this->createAlert('theme', 'error', 'Failed to unload theme: '. $name);
 
-                $this->router->redirect('/theme'); // Redirect to the theme page
+                $this->router->back();
             }else{ // If it's not a plugin or theme
                 $this->router->render('response', ['code' => 400], 400);
             }

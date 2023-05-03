@@ -20,12 +20,17 @@ class card_beautify implements Theme{
         $this->name = 'Card_beautify';
         $this->description = 'This theme enhances the visual appeal of cards by making them square-shaped.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.0.0';
+        $this->version = '1.0.1.0';
         $this->created = '29.04.2023';
         $this->type = 2;
         $this->image = 'image.svg';
-        $this->supportedVersion = '1.0.3.0';
+        $this->supportedVersion = '1.0.4.0';
         $this->incompatible = ['Style_changer'];
+    }
+
+    public function getDescription()
+    {
+        return 'Card_beautify is a theme that improves the visual appeal of cards by giving them a square shape. This theme changes the cards to a square shape, which makes them more aesthetically pleasing and consistent. Card_beautify also centers the text in the card, which increases readability and elegance. This theme is not compatible with Style_changer, so you should disable it before using it.';
     }
 
     public function run(){

@@ -19,11 +19,16 @@ class style_changer implements Theme{
         $this->name = 'Style_changer';
         $this->description = 'Basic theme with additional column display functionality in plugins and themes views.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.0.3';
+        $this->version = '1.0.1.3';
         $this->created = '21.04.2023';
         $this->type = 2;
         $this->image = 'image.svg';
-        $this->supportedVersion = '1.0.3.0';
+        $this->supportedVersion = '1.0.4.0';
+    }
+
+    public function getDescription()
+    {
+        return 'Style_changer is a basic theme that adds additional functionality for displaying cards in the plugin and theme views. This theme only changes the style of how cards with mods are displayed, from square to oblong. Style_changer allows for better use of space and easier comparison of mods.';
     }
 
     public function run(){

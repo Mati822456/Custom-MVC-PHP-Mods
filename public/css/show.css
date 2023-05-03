@@ -1,0 +1,201 @@
+.show{
+    width: 70%;
+    margin: auto;
+    min-height: calc(100vh - 50px);
+    transition: .2s ease all;
+    padding: 10px 0;
+}
+.show .header,
+.show .info,
+.show .desc{
+    width: 100%;
+    margin: 8px;
+}
+.show .header,
+.show .desc{
+    padding: 20px;
+    background: var(--card-background-color);
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 17px 0px var(--card-shadow);
+    -moz-box-shadow: 0px 0px 17px 0px var(--card-shadow);
+    box-shadow: 0px 0px 17px 0px var(--card-shadow);
+}
+.show .info{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.show .info .card-requirements,
+.show .info .card-incompatible{
+    width: calc(50% - 10px);
+    padding: 10px;
+    text-align: center;
+    background: var(--card-background-color);
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 17px 0px var(--card-shadow);
+    -moz-box-shadow: 0px 0px 17px 0px var(--card-shadow);
+    box-shadow: 0px 0px 17px 0px var(--card-shadow);
+}
+.show .info .card-requirements a,
+.show .info .card-incompatible a{
+    color: var(--text-color);
+    text-decoration: none;
+}
+.show .info h3{
+    font-size: 1.3rem;
+}
+.show .header img{
+    width: 128px;
+    height: 128px;
+    margin: auto 50px;
+}
+.show .header a.back{
+    color: var(--text-color);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 15px;
+    padding: 5px 0 10px 10px;
+}
+.show .header a.back:visited{
+    color: var(--text-color);
+}
+.show .header .mod_info{
+    display: flex;
+    flex-direction: row;
+}
+.show .header .wrapper{
+    margin: 10px;
+    line-height: 1.2em;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 28px - 228px - 200px);
+}
+.show .header .wrapper .name{
+    font-size: 28px;
+    font-weight: 700;
+    margin: 5px 0;
+}
+.show .header .actions{
+    margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+.show .header .actions a{
+    text-decoration: none;
+    background: transparent;
+    width: calc(100% - 4px);
+    height: 50%;
+    font-weight: 600;
+    margin: 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: .1s ease all;
+}
+.show .header .actions a i{
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+.show .header .actions a.activate{
+    border: 2px solid #2ecc71;
+    color: #2ecc71;
+    flex-grow: 1;
+}
+.show .header .actions a.activate:hover{
+    border: 2px solid #27ae60;
+    color: #27ae60;
+}
+
+.show .header .actions a.deactivate{
+    border: 2px solid #f1c40f;
+    color: #f1c40f;
+    flex-grow: 1;
+}
+.show .header .actions a.deactivate:hover{
+    border: 2px solid #f39c12;
+    color: #f39c12;
+}
+
+.show .header .actions a.uninstall{
+    border: 2px solid #e74c3c;
+    color: #e74c3c;
+    flex-grow: 2;
+}
+.show .header .actions a.uninstall:hover{
+    border: 2px solid #c0392b;
+    color: #c0392b;
+}
+.show .header label{
+    color: #707070;
+    font-weight: 700;
+    font-size: 12px;
+    margin: 2px 0;
+}
+.line-1{
+    margin: auto 5px auto 0;
+}
+
+@media screen and (max-width: 1200px) {
+    .show{
+        width: 90%;
+    }
+}
+@media screen and (max-width: 880px) {
+    .show{
+        width: calc(100% - 30px);
+    }
+    .show .header img{
+        width: 96px;
+        height: 96px;
+        margin: auto 25px;
+    }
+    .show .header .wrapper{
+        width: calc(100% - 28px - 146px - 200px);
+    }
+}
+@media screen and (max-width: 720px) {
+    .show .info{
+        flex-direction: column;
+    }
+    .show .info .card-requirements, 
+    .show .info .card-incompatible{
+        width: 100%; 
+    }
+    .show .info:has(.card-requirements) .card-incompatible{
+        margin-top: 16px;
+    }
+    .show .header .mod_info{
+        flex-direction: column;
+    }
+    .show .header img{
+        margin: 15px auto;
+    }
+    .show .header .wrapper{
+        width: calc(100% - 20px);
+    }
+    .show .header .actions{
+        flex-direction: row;
+        width: 100%;
+        height: 80px;
+    }
+    .show .header .actions a{
+        width: calc(50% - 4px);
+        height: 100%;
+    }
+    .line-1{
+        padding: 0;
+        width: calc(100% - 20px);
+        margin: 5px 0;
+        border-right: none;
+        border-bottom: 1px solid var(--line-color);
+    }
+}
+@media screen and (max-width: 425px) {
+    .show .header .wrapper .name{
+        font-size: 20px;
+    }
+}

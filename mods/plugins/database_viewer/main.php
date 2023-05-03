@@ -19,11 +19,16 @@ class database_viewer implements Plugin{
         $this->name = 'Database_viewer';
         $this->description = 'Database_viewer is a straightforward plugin enabling users to browse database.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.0.3';
+        $this->version = '1.0.1.3';
         $this->created = '21.04.2023';
         $this->type = 1;
         $this->image = 'image.svg';
-        $this->supportedVersion = '1.0.3.0';
+        $this->supportedVersion = '1.0.4.0';
+    }
+
+    public function getDescription()
+    {
+        return 'Database_viewer is a simple plugin that allows users to view the database. The plugin allows you to display a list of active plugins and themes. The plugin also adds an additional tab on the home page that allows users to quickly navigate to the database viewer. In addition, the plugin creates an additional /database location that displays the entire contents of the database in tabular form. The plugin also adds an additional tab in the navigation that makes it easy to navigate to the database overview.';
     }
 
     public function run(){

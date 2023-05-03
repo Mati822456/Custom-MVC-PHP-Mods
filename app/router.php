@@ -95,6 +95,15 @@ class Router{
         exit;
     }
 
+    public function back()
+    {
+        if(isset($_SERVER['HTTP_REFERER']) && !empty($_SERVER['HTTP_REFERER'])){
+            $this->redirect($_SERVER['HTTP_REFERER']);
+        }else{
+            $this->redirect('/');
+        }
+    }
+
     public function run()
     {
         // Get the path component of the current URL

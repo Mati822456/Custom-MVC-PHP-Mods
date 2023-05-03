@@ -13,4 +13,6 @@ $route->get('/activate', 'Manager', 'activate');
 $route->get('/deactivate', 'Manager', 'deactivate');
 $route->get('/uninstall', 'Manager', 'uninstall');
 
+$route->get('/show', 'ShowController', 'show');
+
 $route->run();

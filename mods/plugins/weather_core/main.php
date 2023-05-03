@@ -19,11 +19,16 @@ class Weather_core implements Plugin{
         $this->name = 'Weather_core';
         $this->description = 'The basic core used to download weather data from Warsaw, which can be used in other plugins.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.0.2';
+        $this->version = '1.0.1.2';
         $this->created = '24.04.2023';
         $this->type = 1;
         $this->image = 'image.svg';
-        $this->supportedVersion = '1.0.3.0';
+        $this->supportedVersion = '1.0.4.0';
+    }
+
+    public function getDescription()
+    {
+        return 'Weather_core is a basic plugin that is used to download weather data from Warsaw at the current hour. This plugin allows other plugins to use the current temperature, wind speed and weather condition information. Weather_core adds a /get-weather location that returns data in JSON format that can be easily processed by other plugins. Weather_core is easy to use and provides a stable and reliable source of weather data.';
     }
 
     public function run(){

@@ -14,7 +14,6 @@
     </div>
     <section>
         <?php
-            
             echo '<h2>Detected: '. count($plugins) . (count($plugins) > 1 ? ' plugins' : ' plugin') .'</h2><div class="line"></div>';
             if(isset($_SESSION['message']['plugin'])){
                 foreach($_SESSION['message']['plugin'] as $key => $type){
@@ -32,6 +31,7 @@
                 echo '<div class="card">';
                     echo '<img src=./public/mods/plugins/' . $plugin->name . '/' . $plugin->image . '>';
                     echo '<div class="line-1"> </div>';
+                    echo '<a href="/show?name='.$plugin->name.'" class="info"><i class="fa-solid fa-circle-info"></i></a>';
                     echo '<div class="wrapper">';
                         echo '<p class="name">'.$plugin->name.'</p>';
                         echo '<p class="date">Creation date: '.$plugin->created.'</p>';
