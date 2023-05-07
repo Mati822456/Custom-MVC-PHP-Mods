@@ -53,8 +53,8 @@ class ThemeRepository extends Theme{
     {
         $this->database->update(
             'themes',
-            ['name = "' . $theme->getName() . '"'],
-            ['id = '. $theme->getId()]
+            ['name' => $theme->getName()],
+            ['id' => $theme->getId()]
         );
     }
 

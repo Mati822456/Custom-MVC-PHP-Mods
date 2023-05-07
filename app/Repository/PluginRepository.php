@@ -53,8 +53,8 @@ class PluginRepository extends Plugin{
     {
         $this->database->update(
             'plugins',
-            ['name = "' . $plugin->getName() . '"'],
-            ['id = '. $plugin->getId()]
+            ['name' => $plugin->getName()],
+            ['id' => $plugin->getId()]
         );
     }
 
