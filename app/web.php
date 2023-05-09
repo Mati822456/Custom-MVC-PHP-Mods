@@ -2,9 +2,7 @@
 
 namespace App;
 
-use App\Router;
-
-$route = new Router;
+$route = new Router();
 
 $route->get('/', 'MainController', 'index');
 $route->get('/plugin', 'PluginController', 'index');

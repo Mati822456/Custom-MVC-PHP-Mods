@@ -2,13 +2,13 @@
 
 namespace Mods\Plugins;
 
-interface Plugin{
-
+interface Plugin
+{
     public function run();
-    public function down();
-    public function uninstall();
-    public function getDescription();
-    
-}
 
-?>
+    public function down();
+
+    public function uninstall();
+
+    public function getDescription();
+}

@@ -2,17 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Controllers\Controller;
 use App\Repository\ThemeRepository;
 
-class ThemeController extends Controller{
-
+class ThemeController extends Controller
+{
     private $themeRepository;
 
     public function __construct()
     {
         parent::__construct();
-        $this->themeRepository = new ThemeRepository;
+        $this->themeRepository = new ThemeRepository();
     }
 
     public function index()
@@ -25,17 +24,15 @@ class ThemeController extends Controller{
         $active = [];
 
         // Create an array with the names of the active themes
-        foreach($result as $theme){
+        foreach ($result as $theme) {
             $active[] = $theme->getName();
         }
-        
+
         // Render the "themes" view, passing the available themes, the active themes to the view and themes that cannot be run
         $this->router->render('themes', [
-            'themes' => $themes,
-            'active' => $active,
-            'cannotRun' => $this->manager->getModsCannotRun()
+            'themes'    => $themes,
+            'active'    => $active,
+            'cannotRun' => $this->manager->getModsCannotRun(),
         ]);
-
     }
-
 }

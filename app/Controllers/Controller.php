@@ -2,21 +2,19 @@
 
 namespace App\Controllers;
 
-use App\Router;
 use App\Database;
-use App\Controllers\Manager;
+use App\Router;
 
-abstract class Controller{
-
+abstract class Controller
+{
     protected Router $router;
     protected Database $database;
     protected Manager $manager;
 
-    function __construct()
+    public function __construct()
     {
         $this->router = new Router();
         $this->database = new Database();
         $this->manager = new Manager();
     }
-
 }
