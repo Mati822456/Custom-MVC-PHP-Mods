@@ -2,10 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Controllers\Controller;
-
-class MainController extends Controller{
-
+class MainController extends Controller
+{
     public function __construct()
     {
         parent::__construct();
@@ -15,5 +13,4 @@ class MainController extends Controller{
     {
         $this->router->render('index');
     }
-
 }

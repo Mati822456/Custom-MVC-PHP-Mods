@@ -5,21 +5,21 @@ namespace App\Repository;
 use App\Database;
 use App\Models\Setting;
 
-class SettingRepository extends Setting{
-
+class SettingRepository extends Setting
+{
     private Database $database;
 
     public function __construct()
     {
-        $this->database = new Database;
+        $this->database = new Database();
     }
 
-    public function getAll(): Array
+    public function getAll(): array
     {
         $settings = [];
 
-        foreach($this->database->getAll('settings') as $result){
-            $setting = new Setting;
+        foreach ($this->database->getAll('settings') as $result) {
+            $setting = new Setting();
             $setting->setId($result['id']);
             $setting->setName($result['name']);
             $setting->setStatus($result['status']);
@@ -27,19 +27,22 @@ class SettingRepository extends Setting{
             $settings[] = $setting;
             unset($setting);
         }
+
         return $settings;
     }
 
-    public function find(Array $param): ?Setting
+    public function find(array $param): ?Setting
     {
         $result = $this->database->find('settings', $param);
-        if($result){
-            $setting = new Setting;
+        if ($result) {
+            $setting = new Setting();
             $setting->setId($result['id']);
             $setting->setName($result['name']);
             $setting->setStatus($result['status']);
+
             return $setting;
         }
+
         return null;
     }
 
@@ -48,8 +51,8 @@ class SettingRepository extends Setting{
         $this->database->store(
             'settings',
             [
-                'name' => $setting->getName(),
-                'status' => $setting->getStatus()
+                'name'   => $setting->getName(),
+                'status' => $setting->getStatus(),
             ]
         );
     }
@@ -59,7 +62,7 @@ class SettingRepository extends Setting{
         $this->database->update(
             'settings',
             ['status' => $setting->getStatus()],
-            ['id' => $setting->getId()]
+            ['id'     => $setting->getId()]
         );
     }
 

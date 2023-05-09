@@ -2,10 +2,8 @@
 
 namespace Mods\Themes;
 
-use Mods\Themes\Theme;
-
-class dark_mode implements Theme{
-
+class dark_mode implements Theme
+{
     public string $name;
     public string $description;
     public string $author;
@@ -15,7 +13,8 @@ class dark_mode implements Theme{
     public string $image;
     public string $supportedVersion;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->name = 'Dark_mode';
         $this->description = 'Simple theme with dark mode support.';
         $this->author = 'Mati822456';
@@ -31,22 +30,25 @@ class dark_mode implements Theme{
         return 'Simple theme with dark mode support. Nothing more :/';
     }
 
-    public function run(){
-        $_SESSION['style'][] = 'public\\mods\\themes\\' . $this->name . '\\style.css';
+    public function run()
+    {
+        $_SESSION['style'][] = 'public\\mods\\themes\\'.$this->name.'\\style.css';
 
-        if(!file_exists('./public/mods/themes/' . $this->name . '/style.css')){
-            copy('./mods/themes/' . $this->name. '/style.css', './public/mods/themes/' . $this->name . '/style.css');
+        if (!file_exists('./public/mods/themes/'.$this->name.'/style.css')) {
+            copy('./mods/themes/'.$this->name.'/style.css', './public/mods/themes/'.$this->name.'/style.css');
         }
     }
-    public function down(){
-        if(file_exists('./public/mods/themes/' . $this->name . '/style.css')){
-            unlink('./public/mods/themes/' . $this->name . '/style.css');
+
+    public function down()
+    {
+        if (file_exists('./public/mods/themes/'.$this->name.'/style.css')) {
+            unlink('./public/mods/themes/'.$this->name.'/style.css');
         }
     }
-    public function uninstall(){
+
+    public function uninstall()
+    {
         // In this case do nothing, Can be implemented e.g drop table, truncate table or delete records
-        return NULL;
+        return null;
     }
 }
-
-?>

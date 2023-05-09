@@ -2,66 +2,66 @@
 
 namespace App;
 
-use \PDO;
+use PDO;
 
-class Database{
-
+class Database
+{
     public $connection;
 
     public function __construct()
     {
         // Create a new PDO connection to the specified database using the provided credentials
         try {
-            $connection = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASS, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+            $connection = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS, [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
             $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         } catch (\PDOException $e) {
-            die("Database connection failed: ". $e->getMessage());
+            exit('Database connection failed: '.$e->getMessage());
         }
 
         // Store the database connection object for future use
         $this->connection = $connection;
-        
     }
-        
+
     /**
-     * Get All data from database
+     * Get All data from database.
      *
-     * @param  String $tableName
-     * @return Array
+     * @param string $tableName
+     *
+     * @return array
      */
-    public function getAll(String $tableName): Array
+    public function getAll(string $tableName): array
     {
         // Example
         // $database->getAll('plugins');
-        
+
         try {
             $stmt = $this->connection->prepare("SELECT * FROM {$tableName}");
             $stmt->execute();
+
             return $stmt->fetchAll();
         } catch (\PDOException $e) {
-            throw new \PDOException("Error: ". $e->getMessage());
+            throw new \PDOException('Error: '.$e->getMessage());
         }
-
     }
 
-    
     /**
-     * Select data from database
+     * Select data from database.
      *
-     * @param  String $tableName Name of table
-     * @param  Array $params - e.g ['id' => 1]
-     * @param  Array $order - e.g ['id' => 'ASC']
-     * @param  Int $limit - e.g 10
-     * @return Array
+     * @param string $tableName Name of table
+     * @param array  $params    - e.g ['id' => 1]
+     * @param array  $order     - e.g ['id' => 'ASC']
+     * @param int    $limit     - e.g 10
+     *
+     * @return array
      */
-    public function select(String $tableName, Array $params, Array $order = ['id' => 'ASC'], Int $limit = null): Array
+    public function select(string $tableName, array $params, array $order = ['id' => 'ASC'], int $limit = null): array
     {
         // Example
         // $database->select('plugins', ['id' => 1, 'name' => 'Plugin'], ['id' => 'ASC'], 10);
-        
+
         // If array $params if empty return empty array
-        if(empty($params)){
+        if (empty($params)) {
             return [];
         }
 
@@ -69,44 +69,45 @@ class Database{
         $conditions = '';
         $values = [];
 
-
         // Create string of conditions and array of values
-        foreach($params as $key => $value){
-            $conditions .= $key . ' = :' . $key . ' AND ';
-            $values[':' . $key] = $value;
+        foreach ($params as $key => $value) {
+            $conditions .= $key.' = :'.$key.' AND ';
+            $values[':'.$key] = $value;
         }
         // Remove final AND operator
         $conditions = rtrim($conditions, ' AND ');
-        
+
         // The SQL query is built, including the table name and any additional conditions
-        if(empty($order)){
+        if (empty($order)) {
             $orderSQL = 'id ASC';
-        }else{
-            $orderSQL = key($order) . ' ' . current($order);
+        } else {
+            $orderSQL = key($order).' '.current($order);
         }
 
         $sql = sprintf('SELECT * FROM %s WHERE %s ORDER BY %s', $tableName, $conditions, $orderSQL);
-        
-        if($limit){
+
+        if ($limit) {
             $sql .= sprintf(' LIMIT %d', $limit);
         }
-        
+
         try {
             $stmt = $this->connection->prepare($sql);
             $stmt->execute($values);
+
             return $stmt->fetchAll();
         } catch (\PDOException $e) {
-            throw new \PDOException("Error: ". $e->getMessage());
+            throw new \PDOException('Error: '.$e->getMessage());
         }
+    }
 
-    }    
     /**
-     * Finds data in database
+     * Finds data in database.
      *
-     * @param  Array $params
-     * @return Array With one element
+     * @param array $params
+     *
+     * @return array With one element
      */
-    public function find(String $tableName, Array $params): Array
+    public function find(string $tableName, array $params): array
     {
         // Example
         // $database->find('plugins', ['name' => 'Plugin'])
@@ -116,13 +117,13 @@ class Database{
         $values = [];
 
         // Create string of conditions and array of values
-        foreach($params as $key => $value){
-            $conditions .= $key . ' = :' . $key . ' AND ';
-            $values[':' . $key] = $value;
+        foreach ($params as $key => $value) {
+            $conditions .= $key.' = :'.$key.' AND ';
+            $values[':'.$key] = $value;
         }
         // Remove final AND operator
         $conditions = rtrim($conditions, ' AND ');
-        
+
         // Construct the SQL query
         $sql = sprintf('SELECT * FROM %s WHERE %s', $tableName, $conditions);
 
@@ -131,29 +132,27 @@ class Database{
             $stmt = $this->connection->prepare($sql);
             $stmt->execute($values);
             $result = $stmt->fetchAll();
-            if($result){
+            if ($result) {
                 return $result[0];
-            }else{
+            } else {
                 return [];
             }
         } catch (\PDOException $e) {
-            throw new \PDOException("Error: ". $e->getMessage());
+            throw new \PDOException('Error: '.$e->getMessage());
         }
-        
-    }    
+    }
 
-    
     /**
-     * Update record/-s in database
+     * Update record/-s in database.
      *
-     * @param  String $tableName
-     * @param  Array $set
-     * @param  Array $where
+     * @param string $tableName
+     * @param array  $set
+     * @param array  $where
+     *
      * @return void
      */
-    public function update(String $tableName, Array $set, Array $where)
+    public function update(string $tableName, array $set, array $where)
     {
-
         // Example
         // $database->update('plugins', ['name' => 'Plugin'], ['id' => 1]);
 
@@ -165,14 +164,14 @@ class Database{
         $values = [];
 
         // Create string of assignment_list and array of values
-        foreach($set as $key => $value){
-            $assignment_list .= $key . ' = :' . $key . ' AND ';
-            $values[':' . $key] = $value;
+        foreach ($set as $key => $value) {
+            $assignment_list .= $key.' = :'.$key.' AND ';
+            $values[':'.$key] = $value;
         }
         // Create string of conditions and array of values
-        foreach($where as $key => $value){
-            $conditions .= $key . ' = :' . $key . ' AND ';
-            $values[':' . $key] = $value;
+        foreach ($where as $key => $value) {
+            $conditions .= $key.' = :'.$key.' AND ';
+            $values[':'.$key] = $value;
         }
         // Remove final AND operator
         $assignment_list = rtrim($assignment_list, ' AND ');
@@ -185,20 +184,20 @@ class Database{
             $stmt = $this->connection->prepare($sql);
             $stmt->execute($values);
         } catch (\PDOException $e) {
-            throw new \PDOException("Error: ". $e->getMessage());
+            throw new \PDOException('Error: '.$e->getMessage());
         }
-    }    
+    }
 
-        
     /**
-     * Store data in database
+     * Store data in database.
      *
-     * @param  String $tableName
-     * @param  Array $params
+     * @param string $tableName
+     * @param array  $params
+     *
      * @return void
      */
-    public function store(String $tableName, Array $params)
-    {  
+    public function store(string $tableName, array $params)
+    {
         // Example
         // $database->store('plugins', ['name' => 'Plugin']);
 
@@ -210,15 +209,15 @@ class Database{
         $values = [];
 
         // Create string of columns, with corresponding valuesNames and array of values
-        foreach($params as $key => $value){
-            $columns .= $key . ', ';
-            $valuesNames .= ':' . $key . ', ';
-            $values[':' . $key] = $value;
+        foreach ($params as $key => $value) {
+            $columns .= $key.', ';
+            $valuesNames .= ':'.$key.', ';
+            $values[':'.$key] = $value;
         }
         // Remove final AND operator
         $columns = rtrim($columns, ', ');
         $valuesNames = rtrim($valuesNames, ', ');
-        
+
         // Creates the SQL query to insert data into the specified table
         $sql = sprintf('INSERT INTO %s (%s) VALUES (%s)', $tableName, $columns, $valuesNames);
 
@@ -226,19 +225,20 @@ class Database{
             $stmt = $this->connection->prepare($sql);
             $stmt->execute($values);
         } catch (\PDOException $e) {
-            throw new \PDOException("Error: ". $e->getMessage());
+            throw new \PDOException('Error: '.$e->getMessage());
         }
-    }    
-    
+    }
+
     /**
-     * Delete data from database
+     * Delete data from database.
      *
-     * @param  String $tableName
-     * @param  Array $params
+     * @param string $tableName
+     * @param array  $params
+     *
      * @return bool
      */
-    public function delete(String $tableName, Array $params): bool
-    { 
+    public function delete(string $tableName, array $params): bool
+    {
         // Example
         // $database->delete('plugins', ['name' => 'Plugin']);
 
@@ -247,22 +247,23 @@ class Database{
         $values = [];
 
         // Create string of conditions and array of values
-        foreach($params as $key => $value){
-            $conditions .= $key . ' = :' . $key . ' AND ';
-            $values[':' . $key] = $value;
+        foreach ($params as $key => $value) {
+            $conditions .= $key.' = :'.$key.' AND ';
+            $values[':'.$key] = $value;
         }
         // Remove final AND operator
         $conditions = rtrim($conditions, ' AND ');
-        
+
         // Builds a SQL DELETE statement with the table name and WHERE clause
         $sql = sprintf('DELETE FROM %s WHERE %s', $tableName, $conditions);
 
         try {
             $stmt = $this->connection->prepare($sql);
             $stmt->execute($values);
+
             return true;
         } catch (\PDOException $e) {
-            throw new \PDOException("Error: ". $e->getMessage());
+            throw new \PDOException('Error: '.$e->getMessage());
         }
 
         // Returns false if the query was unsuccessful
@@ -275,5 +276,3 @@ class Database{
         $this->connection = null;
     }
 }
-
-?>
