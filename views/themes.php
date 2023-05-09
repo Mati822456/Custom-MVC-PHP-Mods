@@ -7,10 +7,11 @@
     <?php include 'layouts/header.php'; ?>
 </head>
 <body>
-    <div class="topnav">
+<div class="topnav">
         <a href="/">Home</a>
         <a href="/plugin">Plugins</a>
         <a class="active" href="/theme">Themes</a>
+        <a href="/settings">Settings</a>
     </div>
     <section>
         <?php

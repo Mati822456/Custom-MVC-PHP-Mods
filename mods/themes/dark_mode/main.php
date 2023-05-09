@@ -19,11 +19,11 @@ class dark_mode implements Theme{
         $this->name = 'Dark_mode';
         $this->description = 'Simple theme with dark mode support.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.1.3';
+        $this->version = '1.0.1.5';
         $this->created = '21.04.2023';
         $this->type = 2;
         $this->image = 'image.svg';
-        $this->supportedVersion = '1.0.4.0';
+        $this->supportedVersion = '1.0.5.0';
     }
 
     public function getDescription()

@@ -1,6 +1,6 @@
 <?php
 // Website version
-define('APP_VERSION', '1.0.4.0');
+define('APP_VERSION', '1.0.5.0');
 
 // Database params
 define('DB_HOST', '');

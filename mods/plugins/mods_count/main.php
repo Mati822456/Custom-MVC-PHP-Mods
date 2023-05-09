@@ -19,11 +19,11 @@ class Mods_count implements Plugin{
         $this->name = 'Mods_count';
         $this->description = 'This plugin displays the number of mods (on the main page) that are activated.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.1.3';
+        $this->version = '1.0.1.4';
         $this->created = '21.04.2023';
         $this->type = 1;
         $this->image = 'image.svg';
-        $this->supportedVersion = '1.0.4.0';
+        $this->supportedVersion = '1.0.5.0';
     }
 
     public function getDescription()

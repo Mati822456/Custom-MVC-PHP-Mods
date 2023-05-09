@@ -20,11 +20,11 @@ class card_beautify implements Theme{
         $this->name = 'Card_beautify';
         $this->description = 'This theme enhances the visual appeal of cards by making them square-shaped.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.1.0';
+        $this->version = '1.0.1.1';
         $this->created = '29.04.2023';
         $this->type = 2;
         $this->image = 'image.svg';
-        $this->supportedVersion = '1.0.4.0';
+        $this->supportedVersion = '1.0.5.0';
         $this->incompatible = ['Style_changer'];
     }
 

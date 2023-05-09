@@ -10,6 +10,8 @@
   --nav-background-color: #454545;
   --nav-hover-background-color: #F0EEED;
   --nav-hover-text-color: black;
+  --slider-background-color: #ccc;
+  --slider-circle-color: #fff;
 }
 *{
   margin: 0;

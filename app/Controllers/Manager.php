@@ -9,6 +9,7 @@ use App\Repository\PluginRepository;
 use App\Repository\ThemeRepository;
 use App\Models\Plugin;
 use App\Models\Theme;
+use App\Repository\SettingRepository;
 use \Exception;
 
 class Manager{
@@ -21,12 +22,15 @@ class Manager{
     protected Database $database;
     private PluginRepository $pluginRepository;
     private ThemeRepository $themeRepository;
+    private SettingRepository $settingRepository;
     protected array $modsCannotRun;
     protected array $requiredMods;
     protected array $incompatibleMods;
 
     protected array $Plugins_names;
     protected array $Themes_names;
+
+    private array $settings;
 
     public function __construct()
     {
@@ -62,9 +66,15 @@ class Manager{
         $this->pluginRepository = new PluginRepository;
         $this->themeRepository = new ThemeRepository;
 
+        // Create a new instance of SettingRepository
+        $this->settingRepository = new SettingRepository;
+
         // Get all the activated plugins and themes from the database
         $activatedPlugins = $this->pluginRepository->getAll();
         $activatedThemes = $this->themeRepository->getAll();
+
+        // Get all the settings
+        $settings = $this->settingRepository->getAll();
         
         // Get all the names of the activated plugins and themes.
         foreach($activatedPlugins as $active){
@@ -72,6 +82,11 @@ class Manager{
         }
         foreach($activatedThemes as $active){
             $this->Themes_names[] = strtolower($active->getName());
+        }
+
+        // Get the names and status of the settings
+        foreach($settings as $setting){
+            $this->settings[$setting->getName()] = $setting->getStatus();
         }
 
         // Loads the plugins and themes
@@ -624,6 +639,11 @@ class Manager{
     // Create alert message in the $_SESSION array
     public function createAlert(String $modelType, String $alertType, String $description)
     {
+        // Check if the specified alert name is disabled in the settings
+        if($this->settings['alerts-' . $alertType] == 0){
+            return;
+        }
+
         // Check if alert message exists with provided parameters
         if(isset($_SESSION['message'][$modelType][$alertType])){
             if(!in_array($description, $_SESSION['message'][$modelType][$alertType])){
@@ -632,6 +652,22 @@ class Manager{
         }else{
             $_SESSION['message'][$modelType][$alertType][] = $description;
         }
+    }
+
+    // Reload settings from the repository
+    public function refreshSettings()
+    {
+        $this->settings = [];
+        $settings = $this->settingRepository->getAll();
+        foreach($settings as $setting){
+            $this->settings[$setting->getName()] = $setting->getStatus();
+        }
+    }
+
+    // Returns an array of settings
+    public function getSettings(): Array
+    {
+        return $this->settings;
     }
 
     public function __destruct()

@@ -11,6 +11,7 @@
         <a href="/">Home</a>
         <a class="active" href="/plugin">Plugins</a>
         <a href="/theme">Themes</a>
+        <a href="/settings">Settings</a>
     </div>
     <section>
         <?php

@@ -1,6 +1,6 @@
 # Custom-MVC-PHP-Mods
 Basic custom MVC web application that supports mods, including plugins and themes.
-![main](https://user-images.githubusercontent.com/103435077/233659091-25386326-68cf-43bd-93c0-ed0196ee81b6.png)
+![main](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/ebf45b07-7287-4fd6-bd97-9e2745b6cadb)
 
 ## Table of Contents
 * [General Info](#general-info)
@@ -13,14 +13,15 @@ Basic custom MVC web application that supports mods, including plugins and theme
 ## General Info
 This project is a simple website that supports mods, including plugins and themes. It is built using a custom MVC architecture, and offers basic support for database queries using only the AND operator. Custom routes can be created with support for HTTP methods such as GET, POST, PUT, PATCH, and DELETE. Plugins and themes can be obtained from repositories, currently four plugins and three themes are available. The website is designed with security in mind, and includes measures to prevent SQL injection attacks. Additionally, the website is fully responsive, ensuring that it works well on a wide range of devices and screen sizes.
 
-![plugins](https://user-images.githubusercontent.com/103435077/235961161-197236a7-06b8-4f30-b934-6e251d720c54.png)
-![themes](https://user-images.githubusercontent.com/103435077/235961169-4e9b3f5f-104e-41de-a717-3f01765d940c.png)
-![show](https://user-images.githubusercontent.com/103435077/235961164-1f9351c1-a404-44e8-86e4-d3eb35fa184c.png)
+![plugins](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/2e7880c8-e0c9-4bcf-aab3-c28f43fd0c18)
+![themes](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/6fcb1694-2043-4f49-8fb2-00d17add3cb8)
+![settings](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/1c511b5e-2e76-4f36-a049-43f10602065d)
+![show](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/9ba14662-ebbd-4627-8b12-4a8b485afec8)
 
 ### Some modifications enabled:
-![example_main](https://user-images.githubusercontent.com/103435077/233671184-4b452552-0dbf-442d-bbdc-051a146ef444.png)
-![example_theme](https://user-images.githubusercontent.com/103435077/235961157-67d2ebbf-2302-4a7b-9527-55d52f886d07.png)
-![example_theme_2](https://user-images.githubusercontent.com/103435077/235961160-95a0b740-b360-481e-a05f-aa64a3228773.png)
+![example_main](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/9e987841-b862-4063-a71d-8567440016db)
+![example_theme](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/8fdcae69-0d73-4869-b4c3-f93454340f10)
+![example_theme_2](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/2dca738f-6e45-40b7-8b4d-e53d72d32871)
 
 ## Technologies
 * PHP 8.1.5

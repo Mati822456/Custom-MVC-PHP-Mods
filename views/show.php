@@ -12,6 +12,7 @@
         <a href="/">Home</a>
         <a <?php echo $mod->type == 1 ? 'class="active"' : '' ?> href="/plugin">Plugins</a>
         <a <?php echo $mod->type == 2 ? 'class="active"' : '' ?> href="/theme">Themes</a>
+        <a href="/settings">Settings</a>
     </div>
     <section class="show">
         <?php
