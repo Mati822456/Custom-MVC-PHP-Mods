@@ -13,7 +13,7 @@ Basic custom MVC web application that supports mods, including plugins and theme
 ## General Info
 This project is a simple website that supports mods, including plugins and themes. It is built using a custom MVC architecture, and offers basic support for database queries using only the AND operator. Custom routes can be created with support for HTTP methods such as GET, POST, PUT, PATCH, and DELETE. Plugins and themes can be obtained from repositories, currently four plugins and three themes are available. The website is designed with security in mind, and includes measures to prevent SQL injection attacks. Additionally, the website is fully responsive, ensuring that it works well on a wide range of devices and screen sizes.
 
-![plugins](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/2e7880c8-e0c9-4bcf-aab3-c28f43fd0c18)
+![plugins](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/dd9e48a8-8a40-41a5-8947-bfa1518a4978)
 ![themes](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/6fcb1694-2043-4f49-8fb2-00d17add3cb8)
 ![settings](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/1c511b5e-2e76-4f36-a049-43f10602065d)
 ![show](https://github.com/Mati822456/Custom-MVC-PHP-Mods/assets/103435077/9ba14662-ebbd-4627-8b12-4a8b485afec8)

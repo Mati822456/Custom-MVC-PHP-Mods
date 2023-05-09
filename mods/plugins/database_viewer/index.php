@@ -49,40 +49,61 @@
         <a href="/">Home</a>
         <a href="/plugin">Plugins</a>
         <a href="/theme">Themes</a>
+        <a href="/settings">Settings</a>
     </div>
     <section>
         <h2>Welcome to browsing the database</h2>
         <table>
             <tr>
-                <td colspan="2" class="table__header">Plugins</td>
+                <td colspan="3" class="table__header">Plugins</td>
             </tr>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
+                <th colspan="2">Name</th>
             </tr>
             <?php
 
                 foreach($plugins as $plugin){
                     echo '<tr>';
                         echo '<td>'.$plugin->getId().'</td>';
-                        echo '<td>'.$plugin->getName().'</td>';
+                        echo '<td colspan="2">'.$plugin->getName().'</td>';
                     echo '</tr>';
                 }
 
             ?>
             <tr>
-                <td colspan="2" class="table__header">Themes</td>
+                <td colspan="3" class="table__header">Themes</td>
             </tr>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
+                <th colspan="2">Name</th>
             </tr>
             <?php
             
                 foreach($themes as $theme){
                     echo '<tr>';
                         echo '<td>'.$theme->getId().'</td>';
-                        echo '<td>'.$theme->getName().'</td>';
+                        echo '<td colspan="2">'.$theme->getName().'</td>';
+                    echo '</tr>';
+                }
+
+            ?>
+
+            <tr>
+                <td colspan="3" class="table__header">Settings</td>
+            </tr>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+            </tr>
+            <?php
+            
+                foreach($settings as $setting){
+                    echo '<tr>';
+                        echo '<td>'.$setting->getId().'</td>';
+                        echo '<td>'.$setting->getName().'</td>';
+                        echo '<td>'.$setting->getStatus().'</td>';
                     echo '</tr>';
                 }
 

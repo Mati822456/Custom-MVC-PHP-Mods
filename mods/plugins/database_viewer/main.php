@@ -19,7 +19,7 @@ class database_viewer implements Plugin{
         $this->name = 'Database_viewer';
         $this->description = 'Database_viewer is a straightforward plugin enabling users to browse database.';
         $this->author = 'Mati822456';
-        $this->version = '1.0.1.4';
+        $this->version = '1.0.2.0';
         $this->created = '21.04.2023';
         $this->type = 1;
         $this->image = 'image.svg';
