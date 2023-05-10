@@ -61,10 +61,12 @@
                 </div>
                 <div class="actions">
                     <?php
-                        if($activated){
-                            echo '<a href="/deactivate?name='.$mod->name.'&type='.$mod->type.'&referer=show" class="deactivate"><i class="fa-solid fa-stop"></i>Turn off</a>';
-                        }else{
-                            echo '<a href="/activate?name='.$mod->name.'&type='.$mod->type.'&referer=show" class="activate"><i class="fa-solid fa-play"></i>Turn on</a>';
+                        if (!$cannotRun) {
+                            if ($activated ) {
+                                echo '<a href="/deactivate?name='.$mod->name.'&type='.$mod->type.'&referer=show" class="deactivate"><i class="fa-solid fa-stop"></i>Turn off</a>';
+                            }else{
+                                echo '<a href="/activate?name='.$mod->name.'&type='.$mod->type.'&referer=show" class="activate"><i class="fa-solid fa-play"></i>Turn on</a>';
+                            }
                         }
                     ?>
                     <?php printf('<a onClick="showModal(\'%s\', \'%s\', \'%s\', \'%s\');" class="uninstall"><i class="fa-solid fa-trash"></i> Uninstall</a>', 3, 'Do you want to uninstall this ' . ($mod->type == 1 ? 'plugin' : 'theme') . '?', $mod->name, $mod->type); ?>
@@ -81,7 +83,7 @@
                                 if($requiredMods[$require]){
                                     echo '<a href="/show?name='.$require.'"><div class="element">'.$require.' <i class="fa-solid fa-square-check" style="color: #26de81"></i></div></a>';
                                 }else{
-                                    echo '<a href="/show?name='.$require.'"><div class="element">'.$require.' <i class="fa-solid fa-square-xmark" style="color: #eb3b5a"></i></div></a>';
+                                    echo '<div class="element">'.$require.' <i class="fa-solid fa-square-xmark" style="color: #eb3b5a"></i></div>';
                                 }
                             }
                         echo '</div>';

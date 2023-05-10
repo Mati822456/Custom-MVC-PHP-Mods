@@ -79,6 +79,7 @@ class ShowController extends Controller
             'activated'        => $activated,
             'requiredMods'     => $requiredMods,
             'incompatibleMods' => $incompatibleMods,
+            'cannotRun'        => in_array($mod->name, $this->manager->getModsCannotRun()),
         ]);
     }
 }
